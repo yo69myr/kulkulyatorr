@@ -20,11 +20,7 @@
             --transition: all 0.3s ease;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -36,7 +32,6 @@
             min-height: 100vh;
         }
 
-        /* --- Верхня панель (хедер) --- */
         .main-header {
             position: sticky;
             top: 0;
@@ -62,10 +57,8 @@
             gap: 10px;
         }
 
-        .header-title i {
-            font-size: 1.8rem;
-        }
-        
+        .header-title i { font-size: 1.8rem; }
+
         .header-summary {
             display: flex;
             align-items: center;
@@ -77,9 +70,7 @@
             position: relative;
         }
 
-        .header-summary:hover {
-            background: rgba(67, 97, 238, 0.05);
-        }
+        .header-summary:hover { background: rgba(67, 97, 238, 0.05); }
 
         .header-summary::after {
             content: "Натисніть, щоб скопіювати розрахунок";
@@ -122,11 +113,8 @@
             transition: var(--transition);
         }
 
-        .header-summary:hover .amount {
-            transform: scale(1.05);
-        }
+        .header-summary:hover .amount { transform: scale(1.05); }
 
-        /* --- Основний контейнер та форма --- */
         .main-container {
             max-width: 900px;
             margin: 30px auto;
@@ -146,9 +134,7 @@
             gap: 10px;
         }
 
-        h2 i {
-            font-size: 1.5rem;
-        }
+        h2 i { font-size: 1.5rem; }
 
         h3.section-title {
             margin: 35px 0 20px;
@@ -160,14 +146,10 @@
             gap: 10px;
         }
 
-        h3.section-title i {
-            font-size: 1.2rem;
-        }
+        h3.section-title i { font-size: 1.2rem; }
 
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
+        .form-group { margin-bottom: 25px; }
+
         .form-group label, .checkbox-label {
             display: block;
             margin-bottom: 10px;
@@ -219,7 +201,7 @@
             border-color: var(--primary-light);
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-        
+
         .property-section h3 {
             margin-top: 0;
             margin-bottom: 20px;
@@ -228,23 +210,20 @@
             align-items: center;
             gap: 10px;
         }
-        
-        .property-section h3 i {
-            font-size: 1.3rem;
-        }
-        
+
+        .property-section h3 i { font-size: 1.3rem; }
+
         .input-group {
             display: flex;
             gap: 10px;
             align-items: center;
         }
-        
+
         .custom-name-input {
             flex-grow: 1;
             margin-left: 10px;
         }
 
-        /* --- Чекбокси та кнопки --- */
         .checkbox-group {
             display: flex;
             align-items: center;
@@ -280,17 +259,6 @@
             transition: var(--transition);
         }
 
-        .btn-success {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(67, 97, 238, 0.4);
-        }
-
         .btn-small {
             width: 45px;
             height: 45px;
@@ -307,7 +275,6 @@
             transform: scale(1.05);
         }
 
-        /* Сповіщення про копіювання */
         #copy-notification {
             position: fixed;
             bottom: 30px;
@@ -332,34 +299,17 @@
             bottom: 40px;
         }
 
-        /* Адаптивність */
         @media (max-width: 768px) {
             .main-header {
                 flex-direction: column;
                 height: auto;
                 padding: 15px;
             }
-            
-            .header-title {
-                margin-bottom: 15px;
-            }
-            
-            .total-display {
-                align-items: center;
-            }
-            
-            .total-display .amount {
-                font-size: 2rem;
-            }
-            
-            .main-container {
-                padding: 20px;
-                margin: 20px;
-            }
-            
-            .input-group {
-                flex-wrap: wrap;
-            }
+            .header-title { margin-bottom: 15px; }
+            .total-display { align-items: center; }
+            .total-display .amount { font-size: 2rem; }
+            .main-container { padding: 20px; margin: 20px; }
+            .input-group { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -383,7 +333,7 @@
             <h2><i class="fas fa-info-circle"></i> Основна інформація</h2>
             <div class="form-group">
                 <label for="header-text"><i class="fas fa-heading"></i> Заголовок (для копіювання)</label>
-                <textarea id="header-text" placeholder="Наприклад: Розрахунок витрат для Іванова І.І."></textarea>
+                <textarea id="header-text" placeholder="Наприклад: Розрахунок для Дмитренка В.В."></textarea>
             </div>
             <div class="form-group">
                 <label for="property-type"><i class="fas fa-home"></i> Тип об'єкта</label>
@@ -415,8 +365,8 @@
     </div>
 
 <script>
+/* ==================== КАЛЬКУЛЯТОР (версія calc89 без авторизації) ==================== */
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Глобальні змінні та DOM Елементи ---
     const form = document.getElementById('calculator-form');
     const totalRoundedSpan = document.getElementById('total-rounded');
     const copyArea = document.getElementById('copy-area');
@@ -425,24 +375,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let debounceTimer;
     let calculationText = '';
 
-    // --- Ініціалізація ---
-    function init() {
-        generateFields();
-        updateCalculation();
-        form.addEventListener('input', scheduleUpdate);
-        copyArea.addEventListener('click', copyCalculation);
-        document.getElementById('property-type').addEventListener('change', () => {
-            generateFields();
-            updateCalculation();
-        });
-    }
-    
     function scheduleUpdate() {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(updateCalculation, 250);
     }
 
-    // --- Генерація полів вводу ---
     function generateFields() {
         const propertyType = document.getElementById('property-type').value;
         const properties = propertyType.includes('+') ? propertyType.split('+').map(p => p.trim()) : [propertyType];
@@ -452,16 +389,16 @@ document.addEventListener('DOMContentLoaded', () => {
         
         properties.forEach(prop => {
             const propId = prop.replace(/[\s()/]/g, '-');
+            const defaultTax = ["нежитлове приміщення", "гараж", "гараж (або нп)"].includes(prop) ? "5_5" : "0";
+
             const section = document.createElement('div');
             section.className = 'property-section';
             
-            const defaultTax = ["нежитлове приміщення", "гараж", "гараж (або нп)"].includes(prop) ? "5_5" : "0";
-
             section.innerHTML = `
                 <h3><i class="fas fa-building"></i> Об'єкт: ${prop}</h3>
                 <div class="form-group">
                     <label for="amount-${propId}"><i class="fas fa-money-bill-wave"></i> Сума продажу (грн):</label>
-                    <input type="number" id="amount-${propId}" class="sale-amount-input" value="0" min="0">
+                    <input type="number" id="amount-${propId}" class="sale-amount-input" value="" min="0" placeholder="Введіть суму">
                 </div>
                 <div class="checkbox-group">
                     <input type="checkbox" id="duty-${propId}" checked>
@@ -492,29 +429,28 @@ document.addEventListener('DOMContentLoaded', () => {
         commonServicesContainer.innerHTML = '';
         
         const defaults = {
-            "оформлення": { "земля с/г": 9000, "земля + будинок": 16000, "земля + гараж (або нп)": 12000, "земля с/г + садовий будинок": 17000, "будинок": 10000, default: 8000 },
+            "оформлення": { "земля с/г": 10000, "земля + будинок": 16000, "земля + гараж (або нп)": 12000, "земля с/г + садовий будинок": 18000, "будинок": 10000, default: 11000},
             "квитанції": 1500, "оцінка": 1000, "витяг ДЗК": 1000, "заява с/г": 700, "згода": 500, "заява про розрахунок": 500, "інший платіж": 500
         };
 
         let commonHtml = createServiceRow('оформлення', 'Оформлення', defaults.оформлення[propertyType] || defaults.оформлення.default, true, 1000, 'file-contract');
-        commonHtml += createServiceRow('квитанції', 'Квитанції', defaults.квитанції, true, 500, 'receipt');
+        commonHtml += createServiceRow('квитанції', 'Квитанції', defaults.квитанції, false, 500, 'receipt');
 
         properties.forEach(prop => {
             commonHtml += createServiceRow(`оцінка-${prop.replace(/[\s()/]/g, '-')}`, `Оцінка ${prop}`, defaults.оцінка, true, 200, 'search-dollar');
         });
 
         if (propertyType.toLowerCase().includes('земля')) {
-            commonHtml += createServiceRow('витяг-дзк', 'Витяг ДЗК', defaults['витяг ДЗК'], true, 200, 'file-alt');
+            commonHtml += createServiceRow('витяг-дзк', 'Витяг ДЗК', defaults['витяг ДЗК'], false, 200, 'file-alt');
         }
         if (propertyType.toLowerCase().includes('земля с/г')) {
-            commonHtml += createServiceRow('заява-сг', 'Заява с/г', defaults['заява с/г'], true, 0, 'file-signature');
+            commonHtml += createServiceRow('заява-сг', 'Заява с/г', defaults['заява с/г'], false, 0, 'file-signature');
         }
 
         commonHtml += createServiceRow('згода-продаж', 'Згода на продаж', defaults.згода, false, 500, 'signature');
         commonHtml += createServiceRow('згода-купівлю', 'Згода на купівлю', defaults.згода, false, 500, 'signature');
         commonHtml += createServiceRow('заява-розрахунок', 'Заява про повний розрахунок', defaults['заява про розрахунок'], false, 200, 'calculator');
         
-        // --- ДОДАНО БЛОК ДЛЯ ІНШИХ ПЛАТЕЖІВ ---
         commonHtml += `<h3 class="section-title"><i class="fas fa-ellipsis-h"></i> Інші платежі</h3>`;
         for (let i = 1; i <= 5; i++) {
             commonHtml += createCustomPaymentRow(i, defaults['інший платіж']);
@@ -522,7 +458,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         commonServicesContainer.innerHTML = commonHtml;
         
-        // Додаємо обробники для кнопок +/-
         commonServicesContainer.querySelectorAll('.btn-small').forEach(button => {
             button.addEventListener('click', (e) => {
                 const input = e.target.closest('.input-group').querySelector('input[type="number"]');
@@ -568,7 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
     }
 
-    // --- Основна функція розрахунку ---
     function updateCalculation() {
         let total = 0;
         let outputLines = [];
@@ -581,43 +515,45 @@ document.addEventListener('DOMContentLoaded', () => {
         const propertyType = document.getElementById('property-type').value;
         const properties = propertyType.includes('+') ? propertyType.split('+').map(p => p.trim()) : [propertyType];
 
-        const calculateBankCommission = amount => Math.max(amount * 0.01, 25);
+        const calculateBankCommission = amount => amount > 0 ? Math.max(amount * 0.01, 25) : 0;
 
         properties.forEach(prop => {
             const propId = prop.replace(/[\s()/]/g, '-');
             const amount = parseFloat(document.getElementById(`amount-${propId}`).value) || 0;
             
-            outputLines.push(`СУМА ПРОДАЖУ ${prop.toUpperCase()}: ${amount.toFixed(0)}`);
+            if (amount > 0) {
+                outputLines.push(`СУМА ПРОДАЖУ ${prop.toUpperCase()}: ${amount.toFixed(0)}`);
 
-            if (document.getElementById(`duty-${propId}`).checked) {
-                const duty = amount * 0.01;
-                outputLines.push(`1% мито - ${duty.toFixed(0)}`);
-                total += duty;
-            }
-            
-            const pensionCheckbox = document.getElementById(`pension-${propId}`);
-            if (pensionCheckbox && pensionCheckbox.checked) {
-                const pf = amount * 0.01;
-                const pfCommission = calculateBankCommission(pf);
-                outputLines.push(`1% збір до ПФ - ${pf.toFixed(0)} + комісія банка - ${pfCommission.toFixed(0)}`);
-                total += pf + pfCommission;
-            }
-
-            const taxValue = document.getElementById(`tax-${propId}`).value;
-            if (taxValue !== '0') {
-                const [pdfoRate, milRate] = taxValue.split('_').map(parseFloat);
+                if (document.getElementById(`duty-${propId}`).checked) {
+                    const duty = amount * 0.01;
+                    outputLines.push(`1% мито - ${duty.toFixed(0)}`);
+                    total += duty;
+                }
                 
-                const pdfo = amount * (pdfoRate / 100);
-                const pdfoCommission = calculateBankCommission(pdfo);
-                outputLines.push(`${pdfoRate}% ПДФО - ${pdfo.toFixed(0)} + комісія банка - ${pdfoCommission.toFixed(0)}`);
-                total += pdfo + pdfoCommission;
+                const pensionCheckbox = document.getElementById(`pension-${propId}`);
+                if (pensionCheckbox && pensionCheckbox.checked) {
+                    const pf = amount * 0.01;
+                    const pfCommission = calculateBankCommission(pf);
+                    outputLines.push(`1% збір до ПФ - ${pf.toFixed(0)} + комісія банка - ${pfCommission.toFixed(0)}`);
+                    total += pf + pfCommission;
+                }
 
-                const military = amount * (milRate / 100);
-                const militaryCommission = calculateBankCommission(military);
-                outputLines.push(`${milRate}% Військовий збір - ${military.toFixed(0)} + комісія банка - ${militaryCommission.toFixed(0)}`);
-                total += military + militaryCommission;
+                const taxValue = document.getElementById(`tax-${propId}`).value;
+                if (taxValue !== '0') {
+                    const [pdfoRate, milRate] = taxValue.split('_').map(parseFloat);
+                    
+                    const pdfo = amount * (pdfoRate / 100);
+                    const pdfoCommission = calculateBankCommission(pdfo);
+                    outputLines.push(`${pdfoRate}% ПДФО - ${pdfo.toFixed(0)} + комісія банка - ${pdfoCommission.toFixed(0)}`);
+                    total += pdfo + pdfoCommission;
+
+                    const military = amount * (milRate / 100);
+                    const militaryCommission = calculateBankCommission(military);
+                    outputLines.push(`${milRate}% Військовий збір - ${military.toFixed(0)} + комісія банка - ${militaryCommission.toFixed(0)}`);
+                    total += military + militaryCommission;
+                }
+                outputLines.push('');
             }
-            outputLines.push('');
         });
 
         document.querySelectorAll('input[data-type="service"]').forEach(checkbox => {
@@ -630,7 +566,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        // --- ДОДАНО ОБРОБКУ ІНШИХ ПЛАТЕЖІВ ---
         document.querySelectorAll('input[data-type="custom"]').forEach(checkbox => {
             if (checkbox.checked) {
                 const nameInput = document.getElementById(checkbox.dataset.targetName);
@@ -644,29 +579,32 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const roundedTotal = Math.round(total / 50) * 50;
 
-        // Оновлюємо відображення суми та зберігаємо текст для копіювання
         totalRoundedSpan.textContent = `${roundedTotal.toFixed(0)} грн`;
         calculationText = outputLines.join('\n').trim();
     }
     
-    // --- Функція копіювання ---
     function copyCalculation() {
         const finalRoundedTotal = totalRoundedSpan.textContent;
         const textToCopy = `${calculationText}\n\nЗагальна сума: ${finalRoundedTotal}`;
 
         navigator.clipboard.writeText(textToCopy).then(() => {
             copyNotification.classList.add('show');
-            setTimeout(() => {
-                copyNotification.classList.remove('show');
-            }, 2000);
+            setTimeout(() => copyNotification.classList.remove('show'), 2000);
         }).catch(err => {
             console.error('Не вдалося скопіювати текст: ', err);
             alert('Помилка копіювання');
         });
     }
 
-    // --- Запуск ---
-    init();
+    // Запуск калькулятора (без авторизації та інструкцій)
+    generateFields();
+    updateCalculation();
+    form.addEventListener('input', scheduleUpdate);
+    copyArea.addEventListener('click', copyCalculation);
+    document.getElementById('property-type').addEventListener('change', () => {
+        generateFields();
+        updateCalculation();
+    });
 });
 </script>
 </body>
