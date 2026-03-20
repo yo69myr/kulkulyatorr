@@ -332,7 +332,7 @@
         <form id="calculator-form">
             <h2><i class="fas fa-info-circle"></i> Основна інформація</h2>
             <div class="form-group">
-                <label for="header-text"><i class="fas fa-heading"></i> Заголовок (для копіювання)</label>
+                <label for="header-text"><i class="fas fa-heading"></i> Поле для заміток </label>
                 <textarea id="header-text" placeholder="Наприклад: Розрахунок для Дмитренка В.В."></textarea>
             </div>
             <div class="form-group">
@@ -361,7 +361,7 @@
     
     <div id="copy-notification">
         <i class="fas fa-check-circle"></i>
-        Детальний розрахунок скопійовано!
+        Розрахунок скопійовано в буфер обміну!
     </div>
 
 <script>
@@ -441,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (propertyType.toLowerCase().includes('земля')) {
-            commonHtml += createServiceRow('витяг-дзк', 'Витяг ДЗК', defaults['витяг ДЗК'], false, 200, 'file-alt');
+            commonHtml += createServiceRow('витяг-дзк', 'Витяг ДЗК', defaults['витяг ДЗК'], false, 500, 'file-alt');
         }
         if (propertyType.toLowerCase().includes('земля с/г')) {
             commonHtml += createServiceRow('заява-сг', 'Заява с/г', defaults['заява с/г'], false, 0, 'file-signature');
@@ -449,7 +449,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         commonHtml += createServiceRow('згода-продаж', 'Згода на продаж', defaults.згода, false, 500, 'signature');
         commonHtml += createServiceRow('згода-купівлю', 'Згода на купівлю', defaults.згода, false, 500, 'signature');
-        commonHtml += createServiceRow('заява-розрахунок', 'Заява про повний розрахунок', defaults['заява про розрахунок'], false, 200, 'calculator');
+        commonHtml += createServiceRow('заява-розрахунок', 'Заява про повний розрахунок', defaults['заява про розрахунок'], false, 500, 'calculator');
         
         commonHtml += `<h3 class="section-title"><i class="fas fa-ellipsis-h"></i> Інші платежі</h3>`;
         for (let i = 1; i <= 5; i++) {
@@ -596,7 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Запуск калькулятора (без авторизації та інструкцій)
+    // Запуск калькулятора (без авторизації та інструкцій, версія для особистого користування )
     generateFields();
     updateCalculation();
     form.addEventListener('input', scheduleUpdate);
