@@ -411,7 +411,7 @@
             <button type="button" data-mode="inheritance" class="mode-btn" id="modeInheritanceBtn"><i class="fas fa-tree"></i> Спадщина</button>
         </div>
 
-        <!-- Контейнер для купівлі-продажу та дарування  Copyright © 2025 [DUDKA_ARTEM_ДУДКА_АРТЕМ_3676006734]. All rights reserved  -->   
+        <!-- Контейнер для купівлі-продажу та дарування -->
         <div id="saleDonationContainer">
             <div class="form-group" id="propertyTypeGroup">
                 <label for="property-type"><i class="fas fa-building"></i> Тип об'єкта (нерухомість)</label>
@@ -434,7 +434,7 @@
             <div id="common-services-container"></div>
         </div>
 
-        <!-- Контейнер для спадщини Copyright © 2025 [DUDKA_ARTEM_ДУДКА_АРТЕМ_3676006734]. All rights reserved -->
+        <!-- Контейнер для спадщини -->
         <div id="inheritanceContainer" style="display: none;">
             <div id="inheritanceFixedServices"></div>
             <h3 class="section-title"><i class="fas fa-coins"></i> Інші платежі</h3>
@@ -502,14 +502,14 @@
                 </div>
                 <div class="input-group" style="margin-top: 8px;">
                     <input type="number" id="value-${id}" value="${defaultValue}" min="0">
-                    <button type="button" class="btn-small step-minus" data-step="200">−</button>
-                    <button type="button" class="btn-small step-plus" data-step="200">+</button>
+                    <button type="button" class="btn-small step-minus" data-step="500">−</button>
+                    <button type="button" class="btn-small step-plus" data-step="500">+</button>
                 </div>
             `;
             return div;
         }
 
-        // Глобальний делегат для кнопок +/– (для всіх динамічних елементів)  Copyright © 2025 [DUDKA_ARTEM_ДУДКА_АРТЕМ_3676006734]. All rights reserved
+        // Глобальний делегат для кнопок +/– (для всіх динамічних елементів)
         document.addEventListener('click', function(e) {
             const btn = e.target.closest('.step-plus, .step-minus, .qty-plus, .qty-minus, .price-plus, .price-minus');
             if (!btn) return;
@@ -622,7 +622,7 @@
             const properties = propertyType.includes('+') ? propertyType.split('+').map(p => p.trim()) : [propertyType];
             properties.forEach(prop => {
                 const propKey = prop.replace(/[\s()/+-]/g, '-').toLowerCase();
-                commonContainer.appendChild(createServiceRow(`оцінка-${propKey}`, `Оцінка ${prop}`, basePrices.оцінка, true, 200, 'search-dollar'));
+                commonContainer.appendChild(createServiceRow(`оцінка-${propKey}`, `Оцінка ${prop}`, basePrices.оцінка, true, 500, 'search-dollar'));
             });
             if (propertyType.toLowerCase().includes('земля')) {
                 commonContainer.appendChild(createServiceRow('витяг-дзк', 'Витяг ДЗК', basePrices.витягДЗК, false, 500, 'file-alt'));
@@ -665,7 +665,7 @@
             });
             inheritanceCustomDiv.innerHTML = '';
             for (let i = 1; i <= 5; i++) {
-                inheritanceCustomDiv.appendChild(createCustomPaymentRow(`inher_custom_${i}`, 500, false));
+                inheritanceCustomDiv.appendChild(createCustomPaymentRow(`_${i}`, 500, false));
             }
             inheritanceObjectsDiv.innerHTML = '';
             addInheritanceObject(); // перший об'єкт
@@ -945,7 +945,7 @@
         });
         copyArea.addEventListener('click', copyCalculation);
 
-        // Ініціалізація
+        // Ініціалізація   //  Copyright © calc RMN 21.03.2026  Fully created by [DUDKA_ARTEM_ДУДКА_АРТЕМ_3676006734]. All rights reserved.
         setActiveMode('sale');
     })();
 </script>
