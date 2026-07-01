@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Нотаріальний калькулятор | Купівля-продаж · Дарування · Спадщина</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f4f7fc 0%, #e9eef4 100%);
+            color: #1e2a3e;
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 0 0 40px 0;
+        }
+
+        .main-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            height: 90px;
+            z-index: 100;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+        }
+
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e66;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .header-title.hidden {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            width: 0;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-title i {
+            font-size: 1.8rem;
+            color: #2c5f8a;
+        }
+
+        .header-right-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+        }
+        .header-right-group.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .exact-sum-btn {
+            background: #f0f5fb;
+            border: 2px solid #b8d0e6;
+            border-radius: 40px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a4b70;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+        .exact-sum-btn:hover {
+            background: #dce8f5;
+            border-color: #1e5b8a;
+            transform: scale(1.03);
+        }
+        .exact-sum-btn i {
+            font-size: 1.1rem;
+        }
+
+        .preview-btn {
+            background: #1e5b8a;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 22px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(30, 91, 138, 0.25);
+            line-height: 1.2;
+            text-align: center;
+            flex-direction: column;
+        }
+        .preview-btn:hover {
+            background: #134a73;
+            transform: scale(1.03);
+        }
+        .preview-btn i {
+            font-size: 1.1rem;
+        }
+        .preview-btn .btn-label {
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.85;
+            letter-spacing: 0.3px;
+        }
+
+        .header-summary {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            padding: 12px 20px;
+            border-radius: 28px;
+            transition: all 0.2s ease;
+            background: #f8fafd;
+            flex-shrink: 0;
+        }
+
+        .header-summary:hover {
+            background: #eef2fa;
+            transform: scale(1.02);
+        }
+
+        .total-display {
+            text-align: right;
+        }
+
+        .total-display .label {
+            font-size: 0.85rem;
+            color: #4a627a;
+            letter-spacing: 0.3px;
+        }
+
+        .total-display .amount {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1e5b8a;
+            line-height: 1;
+        }
+
+        .main-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15);
+            padding: 30px 35px;
+        }
+
+        .mode-switch {
+            margin: 25px 0 20px 0;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            justify-content: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+        }
+
+        .mode-btn {
+            flex: 1;
+            min-width: 130px;
+            background: #f1f5f9;
+            border: none;
+            padding: 14px 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #2c3e66;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .mode-btn i {
+            font-size: 1.2rem;
+        }
+
+        .mode-btn.active {
+            background: #1e5b8a;
+            color: white;
+            box-shadow: 0 8px 18px rgba(30, 91, 138, 0.25);
+        }
+
+        .mode-btn:not(.active):hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        h2, h3 {
+            color: #1e4663;
+            margin: 20px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        h2 {
+            border-left: 5px solid #1e5b8a;
+            padding-left: 18px;
+            font-size: 1.6rem;
+        }
+
+        h3.section-title {
+            border-bottom: 2px solid #e9edf2;
+            padding-bottom: 8px;
+            margin-top: 35px;
+        }
+
+        .property-section, .inheritance-object {
+            background: #fefefe;
+            border: 1px solid #e2edf7;
+            border-radius: 24px;
+            padding: 20px 25px;
+            margin-bottom: 28px;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+
+        .property-section:hover, .inheritance-object:hover {
+            border-color: #bdd4e8;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label, .checkbox-label {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #1e3a5f;
+        }
+
+        input[type="number"], input[type="text"], select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 18px;
+            border: 1.5px solid #cfdfed;
+            font-size: 1rem;
+            transition: 0.2s;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #1e5b8a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 91, 138, 0.2);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #1e5b8a;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            background: #eef2f8;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 30px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #1e4663;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-small:hover {
+            background: #1e5b8a;
+            color: white;
+            transform: scale(0.96);
+        }
+
+        .tax-buttons {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .tax-option {
+            background: #f1f5f9;
+            border: 1px solid #cbdde9;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1f3b4c;
+        }
+
+        .tax-option.active {
+            background: #1e5b8a;
+            border-color: #1e5b8a;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .custom-name-input {
+            flex: 1;
+            margin-left: 8px;
+        }
+
+        .certificate-row {
+            background: #f9fbfe;
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #b9d0e8;
+        }
+
+        .certificate-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .certificate-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .quantity-control, .price-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 5px 12px;
+            border-radius: 40px;
+            border: 1px solid #d4e2f0;
+        }
+
+        .quantity-control span, .price-control span {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .add-object-btn {
+            background: #eef2fa;
+            border: 2px dashed #8aaec0;
+            width: 100%;
+            padding: 14px;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px 0 10px;
+            transition: 0.2s;
+            color: #1e5b8a;
+        }
+
+        .add-object-btn:hover {
+            background: #e0e8f2;
+            border-color: #1e5b8a;
+        }
+
+        .remove-object-btn {
+            background: none;
+            border: none;
+            color: #b91c1c;
+            font-size: 1.2rem;
+            cursor: pointer;
+            float: right;
+            margin-top: -10px;
+        }
+
+        .remove-object-btn:hover {
+            color: #7f1a1a;
+        }
+
+        #copy-notification {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2f3e;
+            color: white;
+            padding: 12px 26px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transition: 0.2s;
+            pointer-events: none;
+            z-index: 200;
+            font-weight: 500;
+        }
+
+        #copy-notification.show {
+            opacity: 1;
+            bottom: 35px;
+        }
+
+        /* ----- ДОДРОЗ (additional amount row) ----- */
+        .dodroz-row {
+            background: #f6faff;
+            border: 1px dashed #b6d0e8;
+            border-radius: 20px;
+            padding: 18px 20px 16px;
+            margin-top: 18px;
+            position: relative;
+        }
+        .dodroz-row .remove-dodroz-btn {
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            background: none;
+            border: none;
+            color: #b91c1c;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        .dodroz-row .remove-dodroz-btn:hover {
+            color: #7f1a1a;
+        }
+        .dodroz-row .dodroz-note-input {
+            flex: 1;
+            min-width: 140px;
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1.5px solid #cfdfed;
+            font-size: 0.95rem;
+            background: white;
+        }
+        .dodroz-row .dodroz-note-input:focus {
+            border-color: #1e5b8a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 91, 138, 0.15);
+        }
+        .dodroz-row .dodroz-amount-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .dodroz-row .dodroz-amount-wrap label {
+            margin-bottom: 0;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .dodroz-row .dodroz-amount-wrap input[type="number"] {
+            width: 180px;
+            flex-shrink: 0;
+        }
+        .dodroz-row .dodroz-tax-buttons .tax-option {
+            font-size: 0.8rem;
+            padding: 6px 14px;
+        }
+        .dodroz-row .dodroz-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin: 10px 0 6px;
+        }
+
+        .btn-add-dodroz {
+            background: #eaf1fa;
+            border: 2px dashed #8aaec0;
+            padding: 10px 22px;
+            border-radius: 60px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #1e5b8a;
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-add-dodroz:hover {
+            background: #d8e4f2;
+            border-color: #1e5b8a;
+        }
+
+        /* ----- Main note input (з'являється при ДОДРОЗ) ----- */
+        .main-note-input {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 14px;
+            border-radius: 40px;
+            border: 1.5px solid #cfdfed;
+            font-size: 0.95rem;
+            background: white;
+            transition: all 0.25s ease;
+            display: none;
+        }
+        .main-note-input:focus {
+            border-color: #1e5b8a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 91, 138, 0.15);
+        }
+        .main-note-input.visible {
+            display: inline-block;
+        }
+
+        .property-header-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+        .property-header-row h3 {
+            margin: 0;
+        }
+
+        /* ----- Inheritance toggle button ----- */
+        .inheritance-toggle-wrap {
+            margin: 10px 0 16px 0;
+        }
+        .inheritance-toggle-btn {
+            width: 100%;
+            background: #e8eff7;
+            border: 2px solid #b8d0e6;
+            border-radius: 50px;
+            padding: 16px 24px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1a4b70;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            text-align: left;
+        }
+        .inheritance-toggle-btn:hover {
+            background: #d6e2f2;
+            border-color: #1e5b8a;
+        }
+        .inheritance-toggle-btn i {
+            font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+        .inheritance-toggle-btn.collapsed i.fa-chevron-down {
+            transform: rotate(-90deg);
+        }
+        .inheritance-collapsible {
+            overflow: hidden;
+            transition: max-height 0.45s ease, opacity 0.35s ease, margin 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+        }
+        .inheritance-collapsible.open {
+            max-height: 6000px;
+            opacity: 1;
+            margin-top: 16px;
+        }
+
+        /* ----- Preview Modal ----- */
+        .preview-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+        .preview-overlay.open {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .preview-modal {
+            background: white;
+            border-radius: 32px;
+            max-width: 720px;
+            width: 100%;
+            max-height: 85vh;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .preview-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 28px;
+            border-bottom: 2px solid #e9edf2;
+            background: #f8fafd;
+            flex-shrink: 0;
+        }
+        .preview-modal-header .preview-copy-btn {
+            background: #1e5b8a;
+            border: none;
+            border-radius: 40px;
+            padding: 10px 22px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .preview-modal-header .preview-copy-btn:hover {
+            background: #134a73;
+            transform: scale(1.02);
+        }
+        .preview-modal-header .preview-close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #b91c1c;
+            cursor: pointer;
+            padding: 0 8px;
+            line-height: 1;
+            transition: 0.2s;
+        }
+        .preview-modal-header .preview-close-btn:hover {
+            transform: scale(1.2);
+            color: #7f1a1a;
+        }
+
+        .preview-modal-body {
+            padding: 24px 28px 32px;
+            overflow-y: auto;
+            flex: 1;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            background: #fcfdfe;
+            color: #1a2a3a;
+        }
+        .preview-modal-body .preview-empty {
+            color: #8a9aa8;
+            font-style: italic;
+        }
+
+        /* ----- Buttons for note clear/undo ----- */
+        .note-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .btn-undo-note {
+            background: #e8f5e9;
+            border: 1.5px solid #66bb6a;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            color: #2e7d32;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-undo-note:hover {
+            background: #c8e6c9;
+            transform: scale(1.05);
+        }
+        .btn-clear-note {
+            background: #ffebee;
+            border: 1.5px solid #ef5350;
+            border-radius: 40px;
+            padding: 8px 18px;
+            color: #c62828;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .btn-clear-note:hover {
+            background: #ffcdd2;
+            transform: scale(1.03);
+        }
+        .note-row {
+            display: flex;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .note-row textarea {
+            flex: 1;
+        }
+
+        @media (max-width: 700px) {
+            .main-header {
+                flex-direction: column;
+                height: auto;
+                padding: 15px;
+                gap: 10px;
+            }
+            .main-container {
+                padding: 20px;
+                margin: 20px;
+            }
+            .mode-btn {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+            .header-right-group {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .preview-btn, .exact-sum-btn {
+                font-size: 0.85rem;
+                padding: 8px 16px;
+            }
+            .preview-modal {
+                max-width: 100%;
+                margin: 10px;
+            }
+            .dodroz-row .dodroz-amount-wrap input[type="number"] {
+                width: 130px;
+            }
+            .note-row {
+                flex-wrap: wrap;
+            }
+            .note-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .property-header-row h3 {
+                font-size: 1.1rem;
+            }
+            .main-note-input {
+                min-width: 120px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header" id="mainHeader">
+    <div class="header-title" id="headerTitle">
+        <i class="fas fa-gavel"></i>
+        Калькулятор вартості нотаріальних послуг
+    </div>
+
+    <div class="header-right-group" id="headerRightGroup">
+        <button class="exact-sum-btn" id="exactSumBtn" title="Скопіювати точну суму">
+            <i class="fas fa-copy"></i> <span id="exactSumDisplay">0.00</span> грн
+        </button>
+        <button class="preview-btn" id="previewBtn">
+            <i class="fas fa-eye"></i>
+            Попередній<br><span class="btn-label">перегляд розрахунку</span>
+        </button>
+    </div>
+
+    <div class="header-summary" id="copy-area">
+        <div class="total-display">
+            <div class="label">Загальна сума:</div>
+            <div class="amount" id="total-rounded">0 грн</div>
+        </div>
+    </div>
+</header>
+
+<main class="main-container">
+    <form id="calculator-form">
+        <div class="form-group">
+            <label for="header-text"><i class="fas fa-pen-alt"></i> Поле для заміток</label>
+            <div class="note-row">
+                <textarea id="header-text" rows="2" placeholder="Розрахунок вартості нотаріальних послуг"></textarea>
+                <div class="note-actions">
+                    <button type="button" class="btn-undo-note" id="undoNoteBtn" title="Повернути попередній текст"><i class="fas fa-undo-alt"></i></button>
+                    <button type="button" class="btn-clear-note" id="clearNoteBtn"><i class="fas fa-times"></i> Очистити</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mode-switch">
+            <button type="button" data-mode="sale" class="mode-btn active" id="modeSaleBtn"><i class="fas fa-hand-holding-usd"></i> Купівля-продаж</button>
+            <button type="button" data-mode="donation" class="mode-btn" id="modeDonationBtn"><i class="fas fa-gift"></i> Дарування</button>
+            <button type="button" data-mode="inheritance" class="mode-btn" id="modeInheritanceBtn"><i class="fas fa-tree"></i> Спадщина</button>
+        </div>
+
+        <!-- Контейнер для купівлі-продажу та дарування -->
+        <div id="saleDonationContainer">
+            <div class="form-group" id="propertyTypeGroup">
+                <label for="property-type"><i class="fas fa-building"></i> Тип об'єкта (нерухомість)</label>
+                <select id="property-type">
+                    <option>квартира</option>
+                    <option>нежитлове приміщення</option>
+                    <option>кімната</option>
+                    <option>гараж</option>
+                    <option>будинок</option>
+                    <option>земля</option>
+                    <option>земля с/г</option>
+                    <option>земля + будинок</option>
+                    <option>земля + гараж (або нп)</option>
+                    <option>земля с/г + садовий будинок</option>
+                    <option>інше нерухоме майно</option>
+                </select>
+            </div>
+            <div id="property-fields-container"></div>
+            <h3 class="section-title"><i class="fas fa-list-ul"></i> Додаткові послуги та платежі</h3>
+            <div id="common-services-container"></div>
+        </div>
+
+        <!-- Контейнер для спадщини -->
+        <div id="inheritanceContainer" style="display: none;">
+            <div class="inheritance-toggle-wrap">
+                <button type="button" class="inheritance-toggle-btn collapsed" id="inheritanceToggleBtn">
+                    <span><i class="fas fa-chevron-down" id="toggleIcon"></i> Заведення, підготовка до видачі спадщини, запити, заяви, платежі</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+            <div class="inheritance-collapsible" id="inheritanceCollapsible">
+                <div id="inheritanceFixedServices"></div>
+                <h3 class="section-title"><i class="fas fa-coins"></i> Інші платежі</h3>
+                <div id="inheritanceCustomPayments"></div>
+            </div>
+            <div id="inheritanceObjectsContainer"></div>
+            <button type="button" id="addInheritanceObjectBtn" class="add-object-btn"><i class="fas fa-plus-circle"></i> Додати ще один спадковий об'єкт</button>
+        </div>
+    </form>
+</main>
+
+<!-- Preview Modal -->
+<div class="preview-overlay" id="previewOverlay">
+    <div class="preview-modal">
+        <div class="preview-modal-header">
+            <button class="preview-copy-btn" id="previewCopyBtn"><i class="fas fa-copy"></i> Скопіювати</button>
+            <button class="preview-close-btn" id="previewCloseBtn">&times;</button>
+        </div>
+        <div class="preview-modal-body" id="previewModalBody"></div>
+    </div>
+</div>
+
+<div id="copy-notification">
+    <i class="fas fa-copy"></i> Розрахунок скопійовано в буфер обміну!
+</div>
+
+<script>
+    (function() {
+        let currentMode = "sale";
+        let updateTimer;
+        let calculationTextCache = "";
+        let exactTotal = 0;
+        let inheritanceObjectCounter = 0;
+
+        // Для undo тексту в полі заміток
+        let noteBackup = "";
+
+        const form = document.getElementById('calculator-form');
+        const totalSpan = document.getElementById('total-rounded');
+        const exactSumSpan = document.getElementById('exactSumDisplay');
+        const copyArea = document.getElementById('copy-area');
+        const copyNotification = document.getElementById('copy-notification');
+        const saleDonationDiv = document.getElementById('saleDonationContainer');
+        const inheritanceDiv = document.getElementById('inheritanceContainer');
+        const propertyTypeSelect = document.getElementById('property-type');
+        const propertyContainer = document.getElementById('property-fields-container');
+        const commonContainer = document.getElementById('common-services-container');
+        const inheritanceFixedDiv = document.getElementById('inheritanceFixedServices');
+        const inheritanceCustomDiv = document.getElementById('inheritanceCustomPayments');
+        const inheritanceObjectsDiv = document.getElementById('inheritanceObjectsContainer');
+        const addInheritanceBtn = document.getElementById('addInheritanceObjectBtn');
+        const inheritanceToggleBtn = document.getElementById('inheritanceToggleBtn');
+        const inheritanceCollapsible = document.getElementById('inheritanceCollapsible');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        const noteTextarea = document.getElementById('header-text');
+        const clearNoteBtn = document.getElementById('clearNoteBtn');
+        const undoNoteBtn = document.getElementById('undoNoteBtn');
+
+        const bankCommission = amount => amount > 0 ? Math.max(amount * 0.01, 25) : 0;
+
+        // ---------- УТИЛІТИ ----------
+        function createServiceRow(id, labelText, defaultValue, checkedByDefault, step, icon) {
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            const checkboxId = `check-${id}`;
+            const valueId = `value-${id}`;
+            div.innerHTML = `
+                <div class="checkbox-group">
+                    <input type="checkbox" id="${checkboxId}" data-type="service" data-target="${valueId}" ${checkedByDefault ? 'checked' : ''}>
+                    <label for="${checkboxId}" class="checkbox-label"><i class="fas fa-${icon}"></i> ${labelText}</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="${valueId}" value="${defaultValue}" min="0" step="${step || 1}">
+                    ${step ? `<button type="button" class="btn-small step-minus" data-step="${step}">−</button>
+                               <button type="button" class="btn-small step-plus" data-step="${step}">+</button>` : ''}
+                </div>
+            `;
+            return div;
+        }
+
+        function createCustomPaymentRow(index, defaultValue, checkedDefault = false, step) {
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            const id = `custom-${index}`;
+            const stepVal = step || 500;
+            div.innerHTML = `
+                <div class="checkbox-group">
+                    <input type="checkbox" id="check-${id}" data-type="custom" data-target-name="name-${id}" data-target-value="value-${id}" ${checkedDefault ? 'checked' : ''}>
+                    <input type="text" id="name-${id}" placeholder="Інший платіж ${index}" class="custom-name-input">
+                </div>
+                <div class="input-group" style="margin-top: 8px;">
+                    <input type="number" id="value-${id}" value="${defaultValue}" min="0" step="${stepVal}">
+                    <button type="button" class="btn-small step-minus" data-step="${stepVal}">−</button>
+                    <button type="button" class="btn-small step-plus" data-step="${stepVal}">+</button>
+                </div>
+            `;
+            return div;
+        }
+
+        // Глобальний делегат для кнопок +/–
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.step-plus, .step-minus, .qty-plus, .qty-minus, .price-plus, .price-minus');
+            if (!btn) return;
+            e.preventDefault();
+            let step = parseInt(btn.dataset.step);
+            if (isNaN(step)) step = 1;
+            const input = btn.closest('.input-group, .quantity-control, .price-control, .dodroz-amount-wrap')?.querySelector('input[type="number"]');
+            if (input) {
+                let val = parseFloat(input.value) || 0;
+                if (btn.classList.contains('step-plus') || btn.classList.contains('qty-plus') || btn.classList.contains('price-plus')) {
+                    val += step;
+                } else {
+                    val -= step;
+                }
+                if (val < 0) val = 0;
+                input.value = val;
+                scheduleUpdate();
+            }
+        });
+
+        // ---------- РЕЖИМИ КУПІВЛЯ-ПРОДАЖ / ДАРУВАННЯ ----------
+        function generatePropertySections(mode) {
+            const propertyType = propertyTypeSelect.value;
+            const properties = propertyType.includes('+') ? propertyType.split('+').map(p => p.trim()) : [propertyType];
+            propertyContainer.innerHTML = '';
+
+            properties.forEach(prop => {
+                const propId = prop.replace(/[\s()/+-]/g, '-').toLowerCase();
+                const isLand = prop.toLowerCase().includes('земля');
+                let defaultTaxValue = "0";
+                if (mode === "donation") defaultTaxValue = "5_5";
+                else if (mode === "sale") {
+                    if (["нежитлове приміщення", "гараж", "гараж (або нп)"].includes(prop)) defaultTaxValue = "5_5";
+                    else defaultTaxValue = "0";
+                }
+
+                const section = document.createElement('div');
+                section.className = 'property-section';
+                section.dataset.propId = propId;
+
+                // Заголовок з полем для нотатки (приховане спочатку)
+                const headerRow = document.createElement('div');
+                headerRow.className = 'property-header-row';
+                headerRow.innerHTML = `
+                    <h3><i class="fas fa-tag"></i> Об'єкт: ${prop}</h3>
+                    <input type="text" id="main-note-${propId}" class="main-note-input" placeholder="Опис / частка / ПІБ">
+                `;
+                section.appendChild(headerRow);
+
+                // Основна сума
+                const amountWrap = document.createElement('div');
+                amountWrap.className = 'form-group';
+                amountWrap.id = `main-amount-wrap-${propId}`;
+                amountWrap.innerHTML = `
+                    <label for="amount-${propId}"><i class="fas fa-money-bill-wave"></i> ${mode === 'donation' ? 'Сума дарунку (грн):' : 'Сума продажу (грн):'}</label>
+                    <input type="number" id="amount-${propId}" class="sale-amount-input" value="" min="0" placeholder="Введіть суму">
+                `;
+                section.appendChild(amountWrap);
+
+                // Мито
+                const dutyDiv = document.createElement('div');
+                dutyDiv.className = 'checkbox-group';
+                dutyDiv.innerHTML = `
+                    <input type="checkbox" id="duty-${propId}" checked>
+                    <label for="duty-${propId}" class="checkbox-label"><i class="fas fa-receipt"></i> 1% мито</label>
+                `;
+                section.appendChild(dutyDiv);
+
+                // Пенсійний (тільки для продажу)
+                if (mode === "sale" && !isLand) {
+                    const pensionDiv = document.createElement('div');
+                    pensionDiv.className = 'checkbox-group';
+                    pensionDiv.innerHTML = `
+                        <input type="checkbox" id="pension-${propId}" checked>
+                        <label for="pension-${propId}" class="checkbox-label"><i class="fas fa-piggy-bank"></i> 1% збір до ПФ</label>
+                    `;
+                    section.appendChild(pensionDiv);
+                }
+
+                // Податки
+                const taxBlock = document.createElement('div');
+                taxBlock.className = 'form-group';
+                taxBlock.innerHTML = `<label><i class="fas fa-percent"></i> Податки:</label>`;
+                const taxButtonsDiv = document.createElement('div');
+                taxButtonsDiv.className = 'tax-buttons';
+                const taxOptions = [
+                    { value: "0", label: "Без податків" },
+                    { value: "5_5", label: "5% ПДФО + 5% ВЗ" },
+                    { value: "18_5", label: "18% ПДФО + 5% ВЗ" }
+                ];
+                taxOptions.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'tax-option';
+                    if (defaultTaxValue === opt.value) btn.classList.add('active');
+                    btn.textContent = opt.label;
+                    btn.dataset.taxValue = opt.value;
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        taxButtonsDiv.querySelectorAll('.tax-option').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        section.dataset.selectedTax = opt.value;
+                        scheduleUpdate();
+                    });
+                    taxButtonsDiv.appendChild(btn);
+                });
+                taxBlock.appendChild(taxButtonsDiv);
+                section.appendChild(taxBlock);
+                section.dataset.selectedTax = defaultTaxValue;
+
+                // ---- Кнопка "додати суму / частку майна до розрахунку" ----
+                const addDodrozBtn = document.createElement('button');
+                addDodrozBtn.type = 'button';
+                addDodrozBtn.className = 'btn-add-dodroz';
+                addDodrozBtn.innerHTML = '<i class="fas fa-plus-circle"></i> додати суму / частку майна до розрахунку';
+                addDodrozBtn.addEventListener('click', () => {
+                    addDodrozRow(section, propId, prop, mode);
+                });
+                section.appendChild(addDodrozBtn);
+
+                // Контейнер для ДОДРОЗ-рядків
+                const dodrozContainer = document.createElement('div');
+                dodrozContainer.className = 'dodroz-container';
+                dodrozContainer.dataset.propId = propId;
+                section.appendChild(dodrozContainer);
+
+                propertyContainer.appendChild(section);
+            });
+        }
+
+        // ---- ДОДРОЗ - додати рядок ----
+        function addDodrozRow(section, propId, propName, mode) {
+            const container = section.querySelector('.dodroz-container');
+            if (!container) return;
+            const rowId = 'dodroz_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            const isLand = propName.toLowerCase().includes('земля');
+            const defaultTax = "0";
+
+            const row = document.createElement('div');
+            row.className = 'dodroz-row';
+            row.dataset.dodrozId = rowId;
+
+            row.innerHTML = `
+                <button type="button" class="remove-dodroz-btn" data-row="${rowId}"><i class="fas fa-times-circle"></i></button>
+                <div class="dodroz-amount-wrap">
+                    <label for="dodroz-amount-${rowId}"><i class="fas fa-money-bill-wave"></i> Сума продажу (грн):</label>
+                    <input type="number" id="dodroz-amount-${rowId}" class="dodroz-amount-input" value="" min="0" placeholder="Введіть суму" style="width:160px;">
+                    <input type="text" id="dodroz-note-${rowId}" class="dodroz-note-input" placeholder="Опис / частка / ПІБ" style="flex:1;min-width:120px;">
+                    <button type="button" class="btn-small step-minus" data-step="500">−</button>
+                    <button type="button" class="btn-small step-plus" data-step="500">+</button>
+                </div>
+                <div class="dodroz-checkboxes">
+                    <div class="checkbox-group" style="margin-bottom:0;">
+                        <input type="checkbox" id="dodroz-duty-${rowId}" checked>
+                        <label for="dodroz-duty-${rowId}" class="checkbox-label" style="font-weight:500;font-size:0.9rem;">1% мито</label>
+                    </div>
+                    ${mode === 'sale' && !isLand ? `
+                    <div class="checkbox-group" style="margin-bottom:0;">
+                        <input type="checkbox" id="dodroz-pension-${rowId}" checked>
+                        <label for="dodroz-pension-${rowId}" class="checkbox-label" style="font-weight:500;font-size:0.9rem;">1% збір до ПФ</label>
+                    </div>` : ''}
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-weight:500;font-size:0.9rem;"><i class="fas fa-percent"></i> Податки:</label>
+                    <div class="tax-buttons dodroz-tax-buttons">
+                        <button type="button" class="tax-option active" data-tax="0">Без податків</button>
+                        <button type="button" class="tax-option" data-tax="5_5">5% ПДФО + 5% ВЗ</button>
+                        <button type="button" class="tax-option" data-tax="18_5">18% ПДФО + 5% ВЗ</button>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(row);
+
+            // ---- Показати поле для нотатки у головному об'єкті ----
+            const mainNote = section.querySelector('.main-note-input');
+            if (mainNote) mainNote.classList.add('visible');
+
+            // події для цього рядка
+            const removeBtn = row.querySelector('.remove-dodroz-btn');
+            removeBtn.addEventListener('click', () => {
+                row.remove();
+                // Перевірити, чи залишились ще ДОДРОЗ
+                const remaining = container.querySelectorAll('.dodroz-row').length;
+                if (remaining === 0) {
+                    const mainNote2 = section.querySelector('.main-note-input');
+                    if (mainNote2) mainNote2.classList.remove('visible');
+                }
+                scheduleUpdate();
+            });
+
+            row.querySelectorAll('input, select, .tax-option').forEach(el => {
+                el.addEventListener('change', scheduleUpdate);
+                el.addEventListener('click', scheduleUpdate);
+            });
+
+            const taxBtns = row.querySelectorAll('.tax-option');
+            taxBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    taxBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    scheduleUpdate();
+                });
+            });
+
+            // кнопки +/– всередині рядка
+            row.querySelectorAll('.step-minus, .step-plus').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const input = this.closest('.dodroz-amount-wrap').querySelector('input[type="number"]');
+                    if (!input) return;
+                    let step = parseInt(this.dataset.step) || 500;
+                    let val = parseFloat(input.value) || 0;
+                    if (this.classList.contains('step-plus')) val += step;
+                    else val -= step;
+                    if (val < 0) val = 0;
+                    input.value = val;
+                    scheduleUpdate();
+                });
+            });
+
+            scheduleUpdate();
+        }
+
+        // ---- Додаткові послуги ----
+        function generateCommonServices(mode) {
+            commonContainer.innerHTML = '';
+            const basePrices = {
+                оформлення: { "земля с/г": 10000, "земля + будинок": 16000, "земля + гараж (або нп)": 12000, "земля с/г + садовий будинок": 18000, "будинок": 10000, default: 11000},
+                квитанції: 1500,
+                оцінка: 1000,
+                витягДЗК: 1000,
+                заяваСг: 700,
+                згода: 500,
+                заяваРозрахунок: 500,
+                іншийПлатіж: 500
+            };
+            const propertyType = propertyTypeSelect.value;
+            const оформленняPrice = basePrices.оформлення[propertyType] || basePrices.оформлення.default;
+
+            commonContainer.appendChild(createServiceRow('оформлення', 'Оформлення', оформленняPrice, true, 1000, 'file-signature'));
+            commonContainer.appendChild(createServiceRow('квитанції', 'Квитанції', basePrices.квитанції, false, 500, 'receipt'));
+            const properties = propertyType.includes('+') ? propertyType.split('+').map(p => p.trim()) : [propertyType];
+            properties.forEach(prop => {
+                const propKey = prop.replace(/[\s()/+-]/g, '-').toLowerCase();
+                commonContainer.appendChild(createServiceRow(`оцінка-${propKey}`, `Оцінка ${prop}`, basePrices.оцінка, true, 500, 'search-dollar'));
+            });
+            if (propertyType.toLowerCase().includes('земля')) {
+                commonContainer.appendChild(createServiceRow('витяг-дзк', 'Витяг ДЗК', basePrices.витягДЗК, false, 500, 'file-alt'));
+            }
+            if (propertyType.toLowerCase().includes('земля с/г')) {
+                commonContainer.appendChild(createServiceRow('заява-сг', 'Заява с/г', basePrices.заяваСг, false, 0, 'file-signature'));
+            }
+            if (mode === 'donation') {
+                commonContainer.appendChild(createServiceRow('згода-продаж', 'Згода на дарування', basePrices.згода, false, 500, 'handshake'));
+                commonContainer.appendChild(createServiceRow('згода-купівлю', 'Згода на дарування', basePrices.згода, false, 500, 'handshake'));
+                commonContainer.appendChild(createServiceRow('заява-розрахунок', 'Згода батьків на укладення правочину дитиною', basePrices.заяваРозрахунок, false, 500, 'children'));
+            } else {
+                commonContainer.appendChild(createServiceRow('згода-продаж', 'Згода на продаж', basePrices.згода, false, 500, 'signature'));
+                commonContainer.appendChild(createServiceRow('згода-купівлю', 'Згода на купівлю', basePrices.згода, false, 500, 'signature'));
+                commonContainer.appendChild(createServiceRow('заява-розрахунок', 'Заява про повний розрахунок', basePrices.заяваРозрахунок, false, 500, 'calculator'));
+            }
+            const otherTitle = document.createElement('h3');
+            otherTitle.className = 'section-title';
+            otherTitle.innerHTML = '<i class="fas fa-coins"></i> Інші платежі';
+            commonContainer.appendChild(otherTitle);
+            for (let i = 1; i <= 5; i++) {
+                commonContainer.appendChild(createCustomPaymentRow(i, basePrices.іншийПлатіж, false, 500));
+            }
+        }
+
+        // ---------- РЕЖИМ СПАДЩИНИ ----------
+        function generateInheritanceUI() {
+            inheritanceFixedDiv.innerHTML = '';
+            // Заведення спадкової справи – крок 500
+            inheritanceFixedDiv.appendChild(createServiceRow('inher_fixed_0', 'Заведення спадкової справи', 4000, false, 500, 'file-invoice'));
+            // Інші – крок 100
+            const otherServices = [
+                { name: "запит в БТІ", default: 500 },
+                { name: "запит в Пенсійний фонд", default: 500 },
+                { name: "запит в банк", default: 500 },
+                { name: "запит", default: 500 },
+                { name: "заява від спадкоємця", default: 500 },
+                { name: "додаткова заява", default: 500 }
+            ];
+            otherServices.forEach((svc, idx) => {
+                inheritanceFixedDiv.appendChild(createServiceRow(`inher_fixed_${idx+1}`, svc.name, svc.default, false, 100, 'file-invoice'));
+            });
+
+            inheritanceCustomDiv.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                inheritanceCustomDiv.appendChild(createCustomPaymentRow(`_${i}`, 500, false, 100));
+            }
+
+            inheritanceObjectsDiv.innerHTML = '';
+            inheritanceObjectCounter = 0;
+            // Перший об'єкт – без галочки на свідоцтві
+            addInheritanceObject(false);
+        }
+
+        function addInheritanceObject(autoCheckCert = true) {
+            const objectId = 'obj_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+            const objectDiv = document.createElement('div');
+            objectDiv.className = 'inheritance-object';
+            objectDiv.dataset.objectId = objectId;
+            const extendedTypes = [
+                "квартира", "нежитлове приміщення", "кімната", "гараж", "будинок", "земля", "земля с/г",
+                "земля + будинок", "земля + гараж (або нп)", "земля с/г + садовий будинок", "інше нерухоме майно",
+                "недоотримана пенсія", "частка у спільному майні подружжя", "транспортний засіб",
+                "недоотримані кошти", "частка в статутному капіталі", "зброя", "банківські вклади", "рухоме майно"
+            ];
+            const typeOptions = extendedTypes.map(t => `<option value="${t}">${t}</option>`).join('');
+            objectDiv.innerHTML = `
+                <button type="button" class="remove-object-btn" data-id="${objectId}"><i class="fas fa-trash-alt"></i></button>
+                <div class="form-group">
+                    <label><i class="fas fa-comment"></i> Замітки / коментар (об'єкт спадщини)</label>
+                    <textarea class="object-comment" placeholder="Додаткові нотатки для цього об'єкта"></textarea>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-building"></i> Тип об'єкта спадщина</label>
+                    <select class="object-type-select">${typeOptions}</select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-money-bill-wave"></i> Вартість (опціонально)</label>
+                    <input type="number" class="object-amount" value="" min="0" placeholder="Введіть суму">
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" class="object-duty">
+                    <label class="checkbox-label"><i class="fas fa-receipt"></i> 1% мито</label>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-percent"></i> Податки:</label>
+                    <div class="tax-buttons object-tax-buttons">
+                        <button type="button" class="tax-option active" data-tax="0">Без податків</button>
+                        <button type="button" class="tax-option" data-tax="5_5">5% ПДФО + 5% ВЗ</button>
+                        <button type="button" class="tax-option" data-tax="18_5">18% ПДФО + 5% ВЗ</button>
+                    </div>
+                </div>
+                <div id="certificates-${objectId}"></div>
+            `;
+            const certContainer = objectDiv.querySelector(`#certificates-${objectId}`);
+            const certs = [
+                { key: "cert1", label: "Свідоцтва про право на спадщину", defaultChecked: autoCheckCert, defaultQty: 1, defaultPrice: 8000, stepQty: 1, stepPrice: 1000 },
+                { key: "cert2", label: "Свідоцтва про право на частку у спільному майні подружжя", defaultChecked: false, defaultQty: 1, defaultPrice: 8000, stepQty: 1, stepPrice: 1000 },
+                { key: "cert3", label: "Свідоцтва на спадщину", defaultChecked: false, defaultQty: 1, defaultPrice: 8000, stepQty: 1, stepPrice: 1000 }
+            ];
+            certs.forEach(cert => {
+                const certDiv = document.createElement('div');
+                certDiv.className = 'certificate-row';
+                certDiv.innerHTML = `
+                    <div class="certificate-header">
+                        <input type="checkbox" class="cert-checkbox" data-cert="${cert.key}" ${cert.defaultChecked ? 'checked' : ''}>
+                        <strong>${cert.label}</strong>
+                    </div>
+                    <div class="certificate-controls">
+                        <div class="quantity-control">
+                            <span>Кількість:</span>
+                            <input type="number" class="cert-qty" value="${cert.defaultQty}" min="0" step="1" style="width: 80px;">
+                            <button type="button" class="btn-small qty-minus" data-step="${cert.stepQty}">−</button>
+                            <button type="button" class="btn-small qty-plus" data-step="${cert.stepQty}">+</button>
+                        </div>
+                        <div class="price-control">
+                            <span>Вартість (грн):</span>
+                            <input type="number" class="cert-price" value="${cert.defaultPrice}" min="0" step="1000" style="width: 110px;">
+                            <button type="button" class="btn-small price-minus" data-step="${cert.stepPrice}">−</button>
+                            <button type="button" class="btn-small price-plus" data-step="${cert.stepPrice}">+</button>
+                        </div>
+                    </div>
+                `;
+                certContainer.appendChild(certDiv);
+            });
+            inheritanceObjectsDiv.appendChild(objectDiv);
+
+            objectDiv.querySelector('.remove-object-btn').addEventListener('click', (e) => {
+                objectDiv.remove();
+                scheduleUpdate();
+            });
+            objectDiv.querySelectorAll('input, select, .tax-option').forEach(el => {
+                el.addEventListener('change', scheduleUpdate);
+                el.addEventListener('click', scheduleUpdate);
+            });
+            const taxBtns = objectDiv.querySelectorAll('.tax-option');
+            taxBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    taxBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    scheduleUpdate();
+                });
+            });
+
+            scheduleUpdate();
+        }
+
+        // ---------- РОЗРАХУНОК ----------
+        function computeTotalAndText() {
+            let total = 0;
+            let lines = [];
+            const headerNote = document.getElementById('header-text').value.trim();
+            if (headerNote) lines.push(headerNote + '\n');
+
+            if (currentMode === 'sale' || currentMode === 'donation') {
+                const propertyType = propertyTypeSelect.value;
+                const properties = propertyType.includes('+') ? propertyType.split('+').map(p => p.trim()) : [propertyType];
+
+                properties.forEach(prop => {
+                    const propId = prop.replace(/[\s()/+-]/g, '-').toLowerCase();
+                    const mainAmountInput = document.getElementById(`amount-${propId}`);
+                    let mainAmount = mainAmountInput ? parseFloat(mainAmountInput.value) || 0 : 0;
+                    const section = document.querySelector(`.property-section[data-prop-id="${propId}"]`);
+
+                    // Основна нотатка (з поля біля заголовка)
+                    const mainNoteInput = document.getElementById(`main-note-${propId}`);
+                    const mainNote = mainNoteInput ? mainNoteInput.value.trim() : '';
+
+                    // Збираємо всі ДОДРОЗ для цього проперті
+                    const dodrozRows = section ? section.querySelectorAll('.dodroz-row') : [];
+                    const dodrozData = [];
+                    dodrozRows.forEach(row => {
+                        const amt = parseFloat(row.querySelector('.dodroz-amount-input')?.value) || 0;
+                        const note = row.querySelector('.dodroz-note-input')?.value.trim() || '';
+                        const duty = row.querySelector('#dodroz-duty-' + row.dataset.dodrozId)?.checked || false;
+                        const pension = row.querySelector('#dodroz-pension-' + row.dataset.dodrozId)?.checked || false;
+                        const taxBtn = row.querySelector('.tax-option.active');
+                        const taxVal = taxBtn ? taxBtn.dataset.tax : "0";
+                        dodrozData.push({ amount: amt, note, duty, pension, tax: taxVal });
+                    });
+
+                    // Якщо немає ДОДРОЗ і головна сума = 0 – пропускаємо
+                    if (mainAmount <= 0 && dodrozData.every(d => d.amount <= 0)) return;
+
+                    // Функція для додавання рядка розрахунку
+                    function processAmount(amount, note, dutyChecked, pensionChecked, taxValue, labelPrefix) {
+                        if (amount <= 0) return;
+                        const noteSuffix = note ? ` - ${note}` : '';
+                        lines.push(`${labelPrefix}: ${Math.round(amount)} грн${noteSuffix}`);
+                        if (dutyChecked) {
+                            const duty = amount * 0.01;
+                            lines.push(`1% мито - ${duty.toFixed(0)}`);
+                            total += duty;
+                        }
+                        if (pensionChecked && currentMode === 'sale') {
+                            const pf = amount * 0.01;
+                            const pfComm = bankCommission(pf);
+                            lines.push(`1% збір до ПФ - ${pf.toFixed(0)} + комісія банка - ${pfComm.toFixed(0)}`);
+                            total += pf + pfComm;
+                        }
+                        if (taxValue !== '0') {
+                            const [pdfoRate, milRate] = taxValue.split('_').map(Number);
+                            const pdfo = amount * (pdfoRate / 100);
+                            const pdfoComm = bankCommission(pdfo);
+                            lines.push(`${pdfoRate}% ПДФО - ${pdfo.toFixed(0)} + комісія банка - ${pdfoComm.toFixed(0)}`);
+                            total += pdfo + pdfoComm;
+                            const military = amount * (milRate / 100);
+                            const militaryComm = bankCommission(military);
+                            lines.push(`${milRate}% Військовий збір - ${military.toFixed(0)} + комісія банка - ${militaryComm.toFixed(0)}`);
+                            total += military + militaryComm;
+                        }
+                    }
+
+                    const mainDuty = document.getElementById(`duty-${propId}`)?.checked || false;
+                    const mainPension = document.getElementById(`pension-${propId}`)?.checked || false;
+                    const mainTax = section?.dataset.selectedTax || "0";
+                    const labelBase = currentMode === 'donation' ? 'СУМА ДАРУНКУ ' + prop.toUpperCase() : 'СУМА ПРОДАЖУ ' + prop.toUpperCase();
+
+                    // Головна сума (з нотаткою)
+                    if (mainAmount > 0) {
+                        const noteForMain = mainNote || '';
+                        processAmount(mainAmount, noteForMain, mainDuty, mainPension, mainTax, labelBase);
+                    }
+
+                    // ДОДРОЗ
+                    dodrozData.forEach((d, idx) => {
+                        const lbl = labelBase + (dodrozData.length > 1 ? ` (частка ${idx+1})` : '');
+                        processAmount(d.amount, d.note, d.duty, d.pension, d.tax, lbl);
+                    });
+
+                    lines.push('');
+                });
+
+                // Додаткові послуги
+                document.querySelectorAll('#common-services-container input[data-type="service"]').forEach(chk => {
+                    if (chk.checked) {
+                        const val = parseFloat(document.getElementById(chk.dataset.target)?.value) || 0;
+                        const label = chk.closest('.form-group')?.querySelector('.checkbox-label')?.innerText.trim() || '';
+                        lines.push(`${label} – ${val.toFixed(0)}`);
+                        total += val;
+                    }
+                });
+                document.querySelectorAll('#common-services-container input[data-type="custom"]').forEach(chk => {
+                    if (chk.checked) {
+                        const name = document.getElementById(chk.dataset.targetName)?.value.trim() || 'Інший платіж';
+                        const val = parseFloat(document.getElementById(chk.dataset.targetValue)?.value) || 0;
+                        lines.push(`${name} - ${val.toFixed(0)}`);
+                        total += val;
+                    }
+                });
+
+            } else if (currentMode === 'inheritance') {
+                // фіксовані послуги
+                document.querySelectorAll('#inheritanceFixedServices input[data-type="service"]').forEach(chk => {
+                    if (chk.checked) {
+                        const val = parseFloat(document.getElementById(chk.dataset.target)?.value) || 0;
+                        const label = chk.closest('.form-group')?.querySelector('.checkbox-label')?.innerText.trim() || '';
+                        lines.push(`${label} - ${val.toFixed(0)}`);
+                        total += val;
+                    }
+                });
+                // кастомні платежі
+                document.querySelectorAll('#inheritanceCustomPayments input[data-type="custom"]').forEach(chk => {
+                    if (chk.checked) {
+                        const name = document.getElementById(chk.dataset.targetName)?.value.trim() || 'Інший платіж';
+                        const val = parseFloat(document.getElementById(chk.dataset.targetValue)?.value) || 0;
+                        lines.push(`${name} - ${val.toFixed(0)}`);
+                        total += val;
+                    }
+                });
+                // об'єкти спадщини
+                document.querySelectorAll('.inheritance-object').forEach(obj => {
+                    const typeSelect = obj.querySelector('.object-type-select');
+                    const objectType = typeSelect ? typeSelect.value : 'об\'єкт';
+                    const amountInput = obj.querySelector('.object-amount');
+                    const amount = amountInput ? parseFloat(amountInput.value) || 0 : 0;
+                    const dutyCheck = obj.querySelector('.object-duty');
+                    const taxActive = obj.querySelector('.tax-option.active');
+                    const taxValue = taxActive ? taxActive.dataset.tax : "0";
+                    const comment = obj.querySelector('.object-comment')?.value.trim() || '';
+                    if (comment) lines.push(comment);
+                    if (amount > 0) {
+                        lines.push(`СУМА СПАДЩИНА ${objectType.toUpperCase()}: ${Math.round(amount)} грн`);
+                        if (dutyCheck && dutyCheck.checked) {
+                            const duty = amount * 0.01;
+                            lines.push(`1% мито - ${duty.toFixed(0)}`);
+                            total += duty;
+                        }
+                        if (taxValue !== '0') {
+                            const [pdfoRate, milRate] = taxValue.split('_').map(Number);
+                            const pdfo = amount * (pdfoRate / 100);
+                            const pdfoComm = bankCommission(pdfo);
+                            lines.push(`${pdfoRate}% ПДФО - ${pdfo.toFixed(0)} + комісія банка - ${pdfoComm.toFixed(0)}`);
+                            total += pdfo + pdfoComm;
+                            const military = amount * (milRate / 100);
+                            const militaryComm = bankCommission(military);
+                            lines.push(`${milRate}% Військовий збір - ${military.toFixed(0)} + комісія банка - ${militaryComm.toFixed(0)}`);
+                            total += military + militaryComm;
+                        }
+                    } else {
+                        lines.push(`СУМА СПАДЩИНА ${objectType.toUpperCase()}:`);
+                    }
+                    obj.querySelectorAll('.certificate-row').forEach(certRow => {
+                        const chk = certRow.querySelector('.cert-checkbox');
+                        if (chk && chk.checked) {
+                            const qty = parseFloat(certRow.querySelector('.cert-qty')?.value) || 0;
+                            const price = parseFloat(certRow.querySelector('.cert-price')?.value) || 0;
+                            const totalCert = qty * price;
+                            const label = certRow.querySelector('strong')?.innerText || 'Свідоцтво';
+                            lines.push(`${label} - ${qty} шт. по ${Math.round(price)} = ${Math.round(totalCert)}`);
+                            total += totalCert;
+                        }
+                    });
+                    lines.push('');
+                });
+            }
+
+            exactTotal = total;
+            const roundedTotal = Math.round(total / 50) * 50;
+            totalSpan.textContent = `${roundedTotal.toFixed(0)} грн`;
+            exactSumSpan.textContent = total.toFixed(2);
+
+            calculationTextCache = lines.join('\n').trim();
+        }
+
+        function scheduleUpdate() {
+            if (updateTimer) clearTimeout(updateTimer);
+            updateTimer = setTimeout(() => computeTotalAndText(), 120);
+        }
+
+        // ---------- КОПІЮВАННЯ ----------
+        function copyCalculation(textToCopy) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                copyNotification.classList.add('show');
+                setTimeout(() => copyNotification.classList.remove('show'), 2000);
+            }).catch(() => alert('Не вдалося скопіювати'));
+        }
+
+        function getFullCalculationText() {
+            const finalTotal = totalSpan.textContent;
+            return calculationTextCache + `\n\nЗагальна сума: ${finalTotal}`;
+        }
+
+        function getExactCalculationText() {
+            const finalTotal = `${exactTotal.toFixed(2)} грн`;
+            return calculationTextCache + `\n\nЗагальна сума (точна): ${finalTotal}`;
+        }
+
+        // ---------- ПЕРЕМИКАННЯ РЕЖИМІВ ----------
+        function setActiveMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                if (btn.dataset.mode === mode) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+            if (mode === 'sale' || mode === 'donation') {
+                saleDonationDiv.style.display = 'block';
+                inheritanceDiv.style.display = 'none';
+                generatePropertySections(mode);
+                generateCommonServices(mode);
+            } else if (mode === 'inheritance') {
+                saleDonationDiv.style.display = 'none';
+                inheritanceDiv.style.display = 'block';
+                generateInheritanceUI();
+                // За замовчуванням – згорнуто
+                inheritanceCollapsible.classList.remove('open');
+                inheritanceToggleBtn.classList.add('collapsed');
+                toggleIcon.className = 'fas fa-chevron-right';
+            }
+            scheduleUpdate();
+        }
+
+        // ---------- ПОДІЇ ----------
+        document.getElementById('modeSaleBtn').addEventListener('click', () => setActiveMode('sale'));
+        document.getElementById('modeDonationBtn').addEventListener('click', () => setActiveMode('donation'));
+        document.getElementById('modeInheritanceBtn').addEventListener('click', () => setActiveMode('inheritance'));
+
+        propertyTypeSelect.addEventListener('change', () => {
+            if (currentMode !== 'inheritance') {
+                generatePropertySections(currentMode);
+                generateCommonServices(currentMode);
+                scheduleUpdate();
+            }
+        });
+
+        addInheritanceBtn.addEventListener('click', () => {
+            addInheritanceObject(true);
+        });
+
+        form.addEventListener('input', (e) => {
+            if (e.target.closest('.tax-option')) return;
+            scheduleUpdate();
+        });
+
+        copyArea.addEventListener('click', () => {
+            const text = getFullCalculationText();
+            copyCalculation(text);
+        });
+
+        // ---- Кнопка точної суми ----
+        document.getElementById('exactSumBtn').addEventListener('click', () => {
+            const text = getExactCalculationText();
+            copyCalculation(text);
+        });
+
+        // ---- Кнопка попереднього перегляду ----
+        const previewOverlay = document.getElementById('previewOverlay');
+        const previewModalBody = document.getElementById('previewModalBody');
+        const previewCloseBtn = document.getElementById('previewCloseBtn');
+
+        document.getElementById('previewBtn').addEventListener('click', () => {
+            const fullText = getFullCalculationText();
+            previewModalBody.textContent = fullText || 'Немає даних для відображення.';
+            previewOverlay.classList.add('open');
+        });
+
+        previewCloseBtn.addEventListener('click', () => {
+            previewOverlay.classList.remove('open');
+        });
+
+        previewOverlay.addEventListener('click', (e) => {
+            if (e.target === previewOverlay) previewOverlay.classList.remove('open');
+        });
+
+        document.getElementById('previewCopyBtn').addEventListener('click', () => {
+            const text = previewModalBody.textContent;
+            if (text && text !== 'Немає даних для відображення.') {
+                copyCalculation(text);
+            } else {
+                copyNotification.textContent = 'Немає даних для копіювання';
+                copyNotification.classList.add('show');
+                setTimeout(() => {
+                    copyNotification.textContent = 'Розрахунок скопійовано в буфер обміну!';
+                    copyNotification.classList.remove('show');
+                }, 1500);
+            }
+        });
+
+        // ---- Кнопка-перемикач для спадщини ----
+        inheritanceToggleBtn.addEventListener('click', () => {
+            const isOpen = inheritanceCollapsible.classList.contains('open');
+            if (isOpen) {
+                inheritanceCollapsible.classList.remove('open');
+                inheritanceToggleBtn.classList.add('collapsed');
+                toggleIcon.className = 'fas fa-chevron-right';
+            } else {
+                inheritanceCollapsible.classList.add('open');
+                inheritanceToggleBtn.classList.remove('collapsed');
+                toggleIcon.className = 'fas fa-chevron-down';
+            }
+        });
+
+        // ---- Очищення / Undo для поля заміток ----
+        clearNoteBtn.addEventListener('click', () => {
+            noteBackup = noteTextarea.value;
+            noteTextarea.value = '';
+            scheduleUpdate();
+        });
+
+        undoNoteBtn.addEventListener('click', () => {
+            if (noteBackup !== undefined) {
+                noteTextarea.value = noteBackup;
+                scheduleUpdate();
+            }
+        });
+
+        // ---- Зміна заголовка через 5 секунд ----
+        setTimeout(() => {
+            const titleEl = document.getElementById('headerTitle');
+            const rightGroup = document.getElementById('headerRightGroup');
+            titleEl.classList.add('hidden');
+            rightGroup.classList.add('visible');
+        }, 5000);
+
+        // ---- Ініціалізація ----
+        setActiveMode('sale');
+    })();
+</script>
+</body>
+</html>
