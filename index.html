@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="uk" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1e5b8a">
+    <title>Нотаріальний калькулятор | Купівля-продаж · Дарування · Спадщина</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ==============================
+           DESIGN TOKENS
+           ============================== */
+        :root {
+            --primary: #1e5b8a;
+            --primary-hover: #164a71;
+            --primary-soft: #e8f0f9;
+            --primary-fg: #ffffff;
+            --accent: #3b82c4;
+
+            --bg: #eef3f9;
+            --bg-gradient: radial-gradient(circle at 20% 0%, #dbe7f4 0%, #eef3f9 45%, #f4f7fb 100%);
+            --surface: #ffffff;
+            --surface-2: #f7faff;
+            --surface-3: #eef4fb;
+            --border: #dde6f0;
+            --border-strong: #c5d5e6;
+            --text: #16283d;
+            --text-muted: #5a6b82;
+            --text-soft: #7d8ea3;
+
+            --success: #16a34a;
+            --success-soft: #dcfce7;
+            --danger: #dc2626;
+            --danger-soft: #fee2e2;
+
+            --shadow-sm: 0 1px 2px rgba(15, 30, 55, 0.06);
+            --shadow-md: 0 6px 16px -6px rgba(15, 30, 55, 0.12);
+            --shadow-lg: 0 20px 40px -18px rgba(15, 30, 55, 0.22);
+            --shadow-primary: 0 10px 24px -10px rgba(30, 91, 138, 0.5);
+
+            --radius-sm: 10px;
+            --radius: 16px;
+            --radius-lg: 22px;
+            --radius-xl: 28px;
+            --radius-pill: 999px;
+
+            --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #5aa5dc;
+            --primary-hover: #7cb8e5;
+            --primary-soft: rgba(90, 165, 220, 0.14);
+            --primary-fg: #0b1725;
+            --accent: #7cb8e5;
+
+            --bg: #0b131e;
+            --bg-gradient: radial-gradient(circle at 20% 0%, #142235 0%, #0f1a29 45%, #0b131e 100%);
+            --surface: #131f2e;
+            --surface-2: #1a2637;
+            --surface-3: #223045;
+            --border: #263447;
+            --border-strong: #354862;
+            --text: #e6edf6;
+            --text-muted: #a3b3c9;
+            --text-soft: #8093ac;
+
+            --success: #4ade80;
+            --success-soft: rgba(74, 222, 128, 0.15);
+            --danger: #f87171;
+            --danger-soft: rgba(248, 113, 113, 0.15);
+
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+            --shadow-md: 0 6px 16px -6px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 20px 40px -18px rgba(0, 0, 0, 0.6);
+            --shadow-primary: 0 10px 24px -10px rgba(90, 165, 220, 0.4);
+        }
+
+        /* ==============================
+           BASE
+           ============================== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            background-image: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text);
+            line-height: 1.5;
+            min-height: 100vh;
+            padding-bottom: 40px;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color var(--transition), color var(--transition);
+        }
+
+        button { font-family: inherit; }
+
+        /* ==============================
+           HEADER
+           ============================== */
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: color-mix(in oklab, var(--surface) 92%, transparent);
+            backdrop-filter: saturate(180%) blur(14px);
+            -webkit-backdrop-filter: saturate(180%) blur(14px);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: background-color var(--transition), border-color var(--transition);
+        }
+
+        .header-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 14px 24px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text);
+            min-width: 0;
+        }
+        .header-title .logo {
+            width: 42px; height: 42px;
+            flex-shrink: 0;
+            display: grid; place-items: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            font-size: 1.15rem;
+            box-shadow: var(--shadow-primary);
+        }
+        .header-title .title-text {
+            display: flex; flex-direction: column;
+            line-height: 1.2;
+            min-width: 0;
+        }
+        .header-title .title-text strong {
+            font-size: 1rem; font-weight: 700;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .header-title .title-text small {
+            font-size: 0.75rem; color: var(--text-muted); font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex; align-items: center;
+            gap: 10px;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .header-right {
+            display: flex; align-items: center; gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius-pill);
+            border: 1px solid transparent;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform var(--transition), background-color var(--transition), border-color var(--transition), box-shadow var(--transition), color var(--transition);
+            white-space: nowrap;
+            user-select: none;
+            color: var(--text);
+            background: transparent;
+        }
+        .btn:active { transform: scale(0.96); }
+        .btn i { font-size: 0.95em; }
+
+        .btn-ghost {
+            background: var(--surface-2);
+            border-color: var(--border);
+            color: var(--text);
+        }
+        .btn-ghost:hover {
+            background: var(--surface-3);
+            border-color: var(--border-strong);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--primary-fg);
+            box-shadow: var(--shadow-primary);
+        }
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 14px 28px -12px color-mix(in oklab, var(--primary) 60%, transparent);
+        }
+
+        .btn-icon {
+            width: 42px; height: 42px;
+            padding: 0;
+            border-radius: 12px;
+        }
+
+        .exact-sum-btn { font-variant-numeric: tabular-nums; }
+        .exact-sum-btn .exact-value { font-weight: 700; color: var(--primary); }
+        [data-theme="dark"] .exact-sum-btn .exact-value { color: var(--primary); }
+
+        .total-chip {
+            display: flex; align-items: center; gap: 14px;
+            padding: 8px 18px 8px 20px;
+            border-radius: var(--radius-pill);
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            cursor: pointer;
+            box-shadow: var(--shadow-primary);
+            transition: transform var(--transition), box-shadow var(--transition);
+            font-variant-numeric: tabular-nums;
+        }
+        .total-chip:hover { transform: translateY(-1px) scale(1.02); }
+        .total-chip .total-label {
+            font-size: 0.7rem; font-weight: 500; letter-spacing: 0.4px;
+            text-transform: uppercase; opacity: 0.85;
+        }
+        .total-chip .total-value {
+            font-size: 1.5rem; font-weight: 800; line-height: 1;
+        }
+        .total-chip .copy-hint {
+            font-size: 0.9rem; opacity: 0.75;
+        }
+
+        .theme-toggle {
+            position: relative; width: 44px; height: 44px;
+            border-radius: 12px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            display: grid; place-items: center;
+            cursor: pointer; color: var(--text);
+            transition: all var(--transition);
+            overflow: hidden;
+        }
+        .theme-toggle:hover {
+            background: var(--surface-3);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: rotate(-8deg);
+        }
+        .theme-toggle i {
+            font-size: 1.1rem;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.3s;
+            position: absolute;
+        }
+        .theme-toggle .icon-sun { opacity: 0; transform: rotate(90deg) scale(0.5); }
+        .theme-toggle .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+        [data-theme="dark"] .theme-toggle .icon-sun { opacity: 1; transform: rotate(0) scale(1); }
+        [data-theme="dark"] .theme-toggle .icon-moon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+
+        /* ==============================
+           MAIN LAYOUT
+           ============================== */
+        .main-container {
+            max-width: 1100px;
+            margin: 32px auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: 32px 36px;
+            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==============================
+           MODE SWITCHER
+           ============================== */
+        .mode-switch {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 6px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-pill);
+            margin: 22px 0 26px 0;
+        }
+        .mode-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: var(--radius-pill);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all var(--transition);
+            color: var(--text-muted);
+        }
+        .mode-btn:hover:not(.active) {
+            background: var(--surface-3);
+            color: var(--text);
+        }
+        .mode-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            box-shadow: var(--shadow-primary);
+        }
+        .mode-btn i { font-size: 1rem; }
+
+        /* ==============================
+           TYPOGRAPHY
+           ============================== */
+        h2, h3 {
+            color: var(--text);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h3.section-title {
+            font-size: 1.05rem;
+            padding: 20px 0 10px 0;
+            margin-top: 28px;
+            border-top: 1px solid var(--border);
+            color: var(--primary);
+        }
+        h3.section-title i { color: var(--primary); }
+
+        /* ==============================
+           FORM
+           ============================== */
+        .form-group { margin-bottom: 18px; }
+
+        label, .checkbox-label {
+            font-weight: 600;
+            font-size: 0.92rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        label i, .checkbox-label i { color: var(--text-muted); font-size: 0.95em; }
+
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            border: 1.5px solid var(--border);
+            font-size: 0.95rem;
+            font-family: inherit;
+            font-variant-numeric: tabular-nums;
+            background: var(--surface);
+            color: var(--text);
+            transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
+        }
+        textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
+        input::placeholder, textarea::placeholder { color: var(--text-soft); }
+        input:hover, select:hover, textarea:hover { border-color: var(--border-strong); }
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 20%, transparent);
+        }
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%235a6b82'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.4a.75.75 0 01-1.08 0l-4.25-4.4a.75.75 0 01.02-1.06z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 18px;
+            padding-right: 42px;
+        }
+        [data-theme="dark"] select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23a3b3c9'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.4a.75.75 0 01-1.08 0l-4.25-4.4a.75.75 0 01.02-1.06z'/%3E%3C/svg%3E");
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        input[type="checkbox"] {
+            width: 20px; height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+        }
+        .checkbox-group label { margin-bottom: 0; cursor: pointer; }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition);
+            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .btn-small:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--primary-fg);
+            transform: scale(0.97);
+        }
+        .btn-small:active { transform: scale(0.9); }
+
+        /* ==============================
+           SECTIONS / CARDS
+           ============================== */
+        .property-section, .inheritance-object {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 22px 24px;
+            margin-bottom: 22px;
+            transition: border-color var(--transition), box-shadow var(--transition);
+            animation: fadeInUp 0.3s ease;
+        }
+        .property-section:hover, .inheritance-object:hover {
+            border-color: var(--border-strong);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ==============================
+           TAX BUTTONS
+           ============================== */
+        .tax-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .tax-option {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            padding: 8px 16px;
+            border-radius: var(--radius-pill);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            color: var(--text);
+            font-family: inherit;
+        }
+        .tax-option:hover:not(.active) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .tax-option.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: var(--primary-fg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .custom-name-input {
+            flex: 1;
+            min-width: 0;
+            margin-left: 4px;
+        }
+
+        /* ==============================
+           CERTIFICATE
+           ============================== */
+        .certificate-row {
+            background: var(--surface);
+            padding: 16px;
+            border-radius: var(--radius);
+            margin-bottom: 14px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+        }
+        .certificate-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        .certificate-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .quantity-control, .price-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface-2);
+            padding: 6px 12px;
+            border-radius: var(--radius-pill);
+            border: 1px solid var(--border);
+        }
+        .quantity-control span, .price-control span {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .quantity-control input, .price-control input {
+            border: none;
+            background: transparent;
+            padding: 4px 0;
+            font-weight: 700;
+        }
+        .quantity-control input:focus, .price-control input:focus {
+            box-shadow: none;
+        }
+
+        /* ==============================
+           BUTTONS
+           ============================== */
+        .add-object-btn {
+            background: transparent;
+            border: 2px dashed var(--border-strong);
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--radius-lg);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px 0 10px;
+            transition: all var(--transition);
+            color: var(--primary);
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .add-object-btn:hover {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            border-style: solid;
+        }
+
+        .remove-object-btn {
+            background: var(--danger-soft);
+            border: none;
+            color: var(--danger);
+            font-size: 1rem;
+            cursor: pointer;
+            float: right;
+            width: 36px; height: 36px;
+            border-radius: 10px;
+            margin: -6px -6px 0 0;
+            transition: all var(--transition);
+            display: inline-grid; place-items: center;
+        }
+        .remove-object-btn:hover { background: var(--danger); color: white; transform: scale(1.05); }
+
+        /* ==============================
+           NOTIFICATION
+           ============================== */
+        #copy-notification {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translate(-50%, 20px);
+            background: var(--text);
+            color: var(--surface);
+            padding: 14px 28px;
+            border-radius: var(--radius-pill);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+            z-index: 300;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+        }
+        #copy-notification.show {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+        #copy-notification i { color: var(--success); }
+
+        /* ==============================
+           DODROZ
+           ============================== */
+        .dodroz-row {
+            background: var(--surface);
+            border: 1.5px dashed var(--border-strong);
+            border-radius: var(--radius);
+            padding: 18px 20px 16px;
+            margin-top: 14px;
+            position: relative;
+            animation: fadeInUp 0.25s ease;
+        }
+        .dodroz-row .remove-dodroz-btn {
+            position: absolute;
+            top: 10px; right: 12px;
+            background: var(--danger-soft);
+            border: none;
+            color: var(--danger);
+            font-size: 0.9rem;
+            cursor: pointer;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            display: grid; place-items: center;
+            transition: all var(--transition);
+        }
+        .dodroz-row .remove-dodroz-btn:hover { background: var(--danger); color: white; }
+
+        .dodroz-row .dodroz-note-input {
+            flex: 1;
+            min-width: 140px;
+            padding: 10px 14px;
+            border-radius: var(--radius-pill);
+            border: 1.5px solid var(--border);
+            font-size: 0.9rem;
+            background: var(--surface);
+            color: var(--text);
+        }
+        .dodroz-row .dodroz-note-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 20%, transparent);
+        }
+        .dodroz-row .dodroz-amount-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .dodroz-row .dodroz-amount-wrap label {
+            margin-bottom: 0;
+            white-space: nowrap;
+        }
+        .dodroz-row .dodroz-amount-wrap input[type="text"].dodroz-amount-input {
+            width: 180px;
+            flex-shrink: 0;
+        }
+        .dodroz-row .dodroz-tax-buttons .tax-option {
+            font-size: 0.78rem;
+            padding: 6px 12px;
+        }
+        .dodroz-row .dodroz-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            margin: 10px 0 6px;
+        }
+
+        .btn-add-dodroz {
+            background: transparent;
+            border: 1.5px dashed var(--border-strong);
+            padding: 10px 20px;
+            border-radius: var(--radius-pill);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            color: var(--primary);
+            margin-top: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+        .btn-add-dodroz:hover {
+            background: var(--primary-soft);
+            border-color: var(--primary);
+            border-style: solid;
+        }
+
+        /* ==============================
+           MAIN NOTE
+           ============================== */
+        .main-note-input {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px 16px;
+            border-radius: var(--radius-pill);
+            border: 1.5px solid var(--border);
+            font-size: 0.9rem;
+            background: var(--surface);
+            color: var(--text);
+            transition: all 0.25s ease;
+            display: none;
+        }
+        .main-note-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px color-mix(in oklab, var(--primary) 20%, transparent);
+        }
+        .main-note-input.visible { display: inline-block; }
+
+        .property-header-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+        .property-header-row h3 {
+            margin: 0;
+            font-size: 1.05rem;
+        }
+
+        /* ==============================
+           INHERITANCE TOGGLE
+           ============================== */
+        .inheritance-toggle-wrap { margin: 6px 0 16px 0; }
+        .inheritance-toggle-btn {
+            width: 100%;
+            background: var(--surface-2);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 16px 22px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            text-align: left;
+            font-family: inherit;
+        }
+        .inheritance-toggle-btn:hover {
+            background: var(--surface-3);
+            border-color: var(--primary);
+        }
+        .inheritance-toggle-btn i { font-size: 1.1rem; color: var(--primary); transition: transform 0.3s ease; }
+        .inheritance-toggle-btn.collapsed i.fa-chevron-down { transform: rotate(-90deg); }
+        .inheritance-collapsible {
+            overflow: hidden;
+            transition: max-height 0.45s ease, opacity 0.35s ease, margin 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+        }
+        .inheritance-collapsible.open {
+            max-height: 8000px;
+            opacity: 1;
+            margin-top: 12px;
+        }
+
+        /* ==============================
+           PREVIEW MODAL
+           ============================== */
+        .preview-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 20, 35, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+        .preview-overlay.open { display: flex; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .preview-modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            max-width: 720px;
+            width: 100%;
+            max-height: 85vh;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .preview-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 22px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-2);
+            flex-shrink: 0;
+        }
+        .preview-modal-header .preview-close-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.6rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 10px;
+            line-height: 1;
+            transition: all var(--transition);
+            border-radius: 10px;
+        }
+        .preview-modal-header .preview-close-btn:hover { background: var(--danger-soft); color: var(--danger); }
+
+        .preview-modal-body {
+            padding: 24px 26px 30px;
+            overflow-y: auto;
+            flex: 1;
+            white-space: pre-wrap;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            background: var(--surface);
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ==============================
+           NOTE ACTIONS
+           ============================== */
+        .note-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .btn-undo-note {
+            background: var(--success-soft);
+            border: 1.5px solid transparent;
+            border-radius: 12px;
+            width: 44px; height: 44px;
+            color: var(--success);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: grid; place-items: center;
+            flex-shrink: 0;
+        }
+        .btn-undo-note:hover { background: var(--success); color: white; transform: scale(1.05); }
+        .btn-clear-note {
+            background: var(--danger-soft);
+            border: 1.5px solid transparent;
+            border-radius: 12px;
+            padding: 0 16px;
+            height: 44px;
+            color: var(--danger);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.88rem;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .btn-clear-note:hover { background: var(--danger); color: white; }
+        .note-row {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+        .note-row textarea { flex: 1; }
+
+        /* ==============================
+           RESPONSIVE
+           ============================== */
+        @media (max-width: 900px) {
+            .header-inner {
+                padding: 12px 16px;
+                gap: 10px;
+                grid-template-columns: auto 1fr auto;
+            }
+            .header-title .title-text small { display: none; }
+            .header-title .title-text strong { font-size: 0.9rem; }
+            .header-actions { display: none; }
+            .header-mobile-actions {
+                display: flex;
+                gap: 8px;
+                padding: 0 16px 12px;
+                max-width: 1180px;
+                margin: 0 auto;
+            }
+            .header-mobile-actions .btn { flex: 1; padding: 12px 14px; font-size: 0.88rem; }
+        }
+
+        @media (min-width: 901px) {
+            .header-mobile-actions { display: none; }
+        }
+
+        @media (max-width: 640px) {
+            .main-container {
+                margin: 16px 12px;
+                padding: 20px 18px;
+                border-radius: var(--radius-lg);
+            }
+            .header-title .logo { width: 38px; height: 38px; font-size: 1rem; }
+            .header-title .title-text strong { font-size: 0.85rem; max-width: 30vw; }
+            .total-chip { padding: 8px 14px 8px 16px; gap: 8px; }
+            .total-chip .total-value { font-size: 1.1rem; }
+            .total-chip .total-label { display: none; }
+            .total-chip .copy-hint { display: none; }
+            .theme-toggle { width: 40px; height: 40px; }
+
+            .mode-switch { grid-template-columns: 1fr; gap: 6px; padding: 6px; border-radius: var(--radius); }
+            .mode-btn { padding: 12px 14px; border-radius: var(--radius); font-size: 0.92rem; justify-content: flex-start; }
+
+            .property-section, .inheritance-object { padding: 18px 16px; border-radius: var(--radius); }
+
+            .dodroz-row .dodroz-amount-wrap input.dodroz-amount-input { width: 100%; }
+
+            .note-row { flex-wrap: wrap; }
+            .note-actions { width: 100%; justify-content: flex-end; }
+
+            .certificate-controls { flex-direction: column; align-items: stretch; }
+            .quantity-control, .price-control { justify-content: space-between; }
+
+            .preview-modal-body { font-size: 0.82rem; padding: 18px; }
+
+            #copy-notification { left: 12px; right: 12px; bottom: 16px; transform: translateY(20px); border-radius: var(--radius); justify-content: center; }
+            #copy-notification.show { transform: translateY(0); }
+        }
+
+        @media (max-width: 380px) {
+            .header-title .title-text strong { max-width: 22vw; }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header" id="mainHeader">
+    <div class="header-inner">
+        <div class="header-title" id="headerTitle">
+            <div class="logo"><i class="fas fa-gavel"></i></div>
+            <div class="title-text">
+                <strong>Нотаріальний калькулятор</strong>
+                <small>Купівля-продаж · Дарування · Спадщина</small>
+            </div>
+        </div>
+
+        <div class="header-actions" id="headerActions">
+            <button class="btn btn-ghost exact-sum-btn" id="exactSumBtn" title="Скопіювати точну суму">
+                <i class="fas fa-copy"></i> <span class="exact-value" id="exactSumDisplay">0,00</span> грн
+            </button>
+            <button class="btn btn-primary" id="previewBtn" title="Попередній перегляд розрахунку">
+                <i class="fas fa-eye"></i> Попередній перегляд
+            </button>
+        </div>
+
+        <div class="header-right">
+            <div class="total-chip" id="copy-area" title="Клікніть, щоб скопіювати розрахунок">
+                <div>
+                    <div class="total-label">Загальна сума</div>
+                    <div class="total-value" id="total-rounded">0 грн</div>
+                </div>
+                <i class="fas fa-copy copy-hint"></i>
+            </div>
+            <button class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему" title="Перемкнути тему">
+                <i class="fas fa-moon icon-moon"></i>
+                <i class="fas fa-sun icon-sun"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="header-mobile-actions">
+        <button class="btn btn-ghost exact-sum-btn" id="exactSumBtnMobile">
+            <i class="fas fa-copy"></i> <span class="exact-value" id="exactSumDisplayMobile">0,00</span>
+        </button>
+        <button class="btn btn-primary" id="previewBtnMobile">
+            <i class="fas fa-eye"></i> Перегляд
+        </button>
+    </div>
+</header>
+
+<main class="main-container">
+    <form id="calculator-form">
+        <div class="form-group">
+            <label for="header-text"><i class="fas fa-pen-alt"></i> Поле для заміток</label>
+            <div class="note-row">
+                <textarea id="header-text" rows="2" placeholder="Розрахунок вартості нотаріальних послуг"></textarea>
+                <div class="note-actions">
+                    <button type="button" class="btn-undo-note" id="undoNoteBtn" title="Повернути попередній текст"><i class="fas fa-undo-alt"></i></button>
+                    <button type="button" class="btn-clear-note" id="clearNoteBtn"><i class="fas fa-times"></i> Очистити</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mode-switch">
+            <button type="button" data-mode="sale" class="mode-btn active" id="modeSaleBtn"><i class="fas fa-hand-holding-usd"></i> Купівля-продаж</button>
+            <button type="button" data-mode="donation" class="mode-btn" id="modeDonationBtn"><i class="fas fa-gift"></i> Дарування</button>
+            <button type="button" data-mode="inheritance" class="mode-btn" id="modeInheritanceBtn"><i class="fas fa-tree"></i> Спадщина</button>
+        </div>
+
+        <!-- Контейнер для купівлі-продажу та дарування -->
+        <div id="saleDonationContainer">
+            <div class="form-group" id="propertyTypeGroup">
+                <label for="property-type"><i class="fas fa-building"></i> Тип об'єкта (нерухомість)</label>
+                <select id="property-type">
+                    <option>квартира</option>
+                    <option>нежитлове приміщення</option>
+                    <option>кімната</option>
+                    <option>гараж</option>
+                    <option>будинок</option>
+                    <option>земля</option>
+                    <option>земля с/г</option>
+                    <option>земля + будинок</option>
+                    <option>земля + гараж (або нп)</option>
+                    <option>земля с/г + садовий будинок</option>
+                    <option>інше нерухоме майно</option>
+                </select>
+            </div>
+            <div id="property-fields-container"></div>
+            <h3 class="section-title"><i class="fas fa-list-ul"></i> Додаткові послуги та платежі</h3>
+            <div id="common-services-container"></div>
+        </div>
+
+        <!-- Контейнер для спадщини -->
+        <div id="inheritanceContainer" style="display: none;">
+            <div class="inheritance-toggle-wrap">
+                <button type="button" class="inheritance-toggle-btn collapsed" id="inheritanceToggleBtn">
+                    <span><i class="fas fa-chevron-down" id="toggleIcon"></i> Заведення, підготовка до видачі спадщини, запити, заяви, платежі</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+            </div>
+            <div class="inheritance-collapsible" id="inheritanceCollapsible">
+                <div id="inheritanceFixedServices"></div>
+                <h3 class="section-title"><i class="fas fa-coins"></i> Інші платежі</h3>
+                <div id="inheritanceCustomPayments"></div>
+            </div>
+            <div id="inheritanceObjectsContainer"></div>
+            <button type="button" id="addInheritanceObjectBtn" class="add-object-btn"><i class="fas fa-plus-circle"></i> Додати ще один спадковий об'єкт</button>
+        </div>
+    </form>
+</main>
+
+<!-- Preview Modal -->
+<div class="preview-overlay" id="previewOverlay">
+    <div class="preview-modal">
+        <div class="preview-modal-header">
+            <button class="btn btn-primary" id="previewCopyBtn"><i class="fas fa-copy"></i> Скопіювати</button>
+            <button class="preview-close-btn" id="previewCloseBtn" aria-label="Закрити">&times;</button>
+        </div>
+        <div class="preview-modal-body" id="previewModalBody"></div>
+    </div>
+</div>
+
+<div id="copy-notification">
+    <i class="fas fa-check-circle"></i> <span id="copyNotifText">Розрахунок скопійовано в буфер обміну!</span>
+</div>
+
+<script>
+    /* =========================================================
+       ТЕМА (світла / темна)
+       ========================================================= */
+    (function initTheme() {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggle = document.getElementById('themeToggle');
+            if (!toggle) return;
+            toggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+            });
+        });
+    })();
+
+    /* =========================================================
+       ФОРМАТУВАННЯ ЧИСЕЛ (пробіли як роздільник тисяч, кома для копійок)
+       ========================================================= */
+    const NumberFormat = (function() {
+        function formatDisplay(numStr) {
+            if (numStr === '' || numStr == null) return '';
+            let s = String(numStr).replace(/[^\d.]/g, '');
+            if (s === '') return '';
+            let [intPart, decPart] = s.split('.');
+            intPart = (intPart || '0').replace(/^0+(\d)/, '$1');
+            intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+            if (decPart !== undefined) return intPart + ',' + decPart.slice(0, 2);
+            return intPart;
+        }
+        function toRaw(str) {
+            if (str == null) return '';
+            let s = String(str).replace(/\s|\u00A0/g, '').replace(',', '.');
+            s = s.replace(/[^\d.]/g, '');
+            const parts = s.split('.');
+            if (parts.length > 2) s = parts[0] + '.' + parts.slice(1).join('');
+            return s;
+        }
+        return { formatDisplay, toRaw };
+    })();
+
+    const nativeInputProto = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+    const nativeInputValueSetter = nativeInputProto.set;
+    const nativeInputValueGetter = nativeInputProto.get;
+
+    function enhanceNumericInput(el) {
+        if (!el || el._enhanced) return;
+        el._enhanced = true;
+        // Read initial value
+        const initialRaw = NumberFormat.toRaw(nativeInputValueGetter.call(el));
+        el.type = 'text';
+        el.setAttribute('inputmode', 'decimal');
+        el.setAttribute('autocomplete', 'off');
+        let raw = initialRaw;
+
+        function setDisplay(fromRaw) {
+            const disp = fromRaw === '' ? '' : NumberFormat.formatDisplay(fromRaw);
+            nativeInputValueSetter.call(el, disp);
+        }
+        setDisplay(raw);
+
+        Object.defineProperty(el, 'value', {
+            configurable: true,
+            get() { return raw; },
+            set(v) {
+                if (v === '' || v === null || v === undefined) {
+                    raw = '';
+                } else {
+                    raw = NumberFormat.toRaw(v);
+                }
+                setDisplay(raw);
+            }
+        });
+
+        el.addEventListener('input', function() {
+            const displayed = nativeInputValueGetter.call(el);
+            const caret = el.selectionStart;
+            const beforeLen = displayed.length;
+            raw = NumberFormat.toRaw(displayed);
+            const formatted = raw === '' ? '' : NumberFormat.formatDisplay(raw);
+            nativeInputValueSetter.call(el, formatted);
+            const afterLen = formatted.length;
+            const delta = afterLen - beforeLen;
+            try {
+                const pos = Math.max(0, (caret || 0) + delta);
+                el.setSelectionRange(pos, pos);
+            } catch (e) { /* ignore */ }
+        });
+
+        el.addEventListener('blur', function() {
+            if (raw === '.' || raw === '') { raw = ''; setDisplay(''); return; }
+            setDisplay(raw);
+        });
+    }
+
+    function enhanceAllNumericInputs(root) {
+        (root || document).querySelectorAll('input[type="number"]').forEach(enhanceNumericInput);
+    }
+
+    // Автоматично покращувати нові інпути через MutationObserver
+    document.addEventListener('DOMContentLoaded', () => {
+        enhanceAllNumericInputs(document);
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach(m => {
+                m.addedNodes.forEach(node => {
+                    if (node.nodeType !== 1) return;
+                    if (node.matches && node.matches('input[type="number"]')) enhanceNumericInput(node);
+                    if (node.querySelectorAll) node.querySelectorAll('input[type="number"]').forEach(enhanceNumericInput);
+                });
+            });
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    });
+
+    /* =========================================================
+       ОСНОВНА ЛОГІКА КАЛЬКУЛЯТОРА (100% збережена)
+       ========================================================= */
+    document.addEventListener('DOMContentLoaded', function() {
+    (function() {
+        let currentMode = "sale";
+        let updateTimer;
+        let calculationTextCache = "";
+        let exactTotal = 0;
+        let inheritanceObjectCounter = 0;
+        let noteBackup = "";
+
+        const form = document.getElementById('calculator-form');
+        const totalSpan = document.getElementById('total-rounded');
+        const exactSumSpan = document.getElementById('exactSumDisplay');
+        const exactSumSpanMobile = document.getElementById('exactSumDisplayMobile');
+        const copyArea = document.getElementById('copy-area');
+        const copyNotification = document.getElementById('copy-notification');
+        const copyNotifText = document.getElementById('copyNotifText');
+        const saleDonationDiv = document.getElementById('saleDonationContainer');
+        const inheritanceDiv = document.getElementById('inheritanceContainer');
+        const propertyTypeSelect = document.getElementById('property-type');
+        const propertyContainer = document.getElementById('property-fields-container');
+        const commonContainer = document.getElementById('common-services-container');
+        const inheritanceFixedDiv = document.getElementById('inheritanceFixedServices');
+        const inheritanceCustomDiv = document.getElementById('inheritanceCustomPayments');
+        const inheritanceObjectsDiv = document.getElementById('inheritanceObjectsContainer');
+        const addInheritanceBtn = document.getElementById('addInheritanceObjectBtn');
+        const inheritanceToggleBtn = document.getElementById('inheritanceToggleBtn');
+        const inheritanceCollapsible = document.getElementById('inheritanceCollapsible');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const noteTextarea = document.getElementById('header-text');
+        const clearNoteBtn = document.getElementById('clearNoteBtn');
+        const undoNoteBtn = document.getElementById('undoNoteBtn');
+
+        const bankCommission = amount => amount > 0 ? Math.max(amount * 0.01, 25) : 0;
+
+        // Форматер для чисел у виводі розрахунку (без копійок)
+        function fmt(n) {
+            const rounded = Math.round(n);
+            return String(rounded).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+        function fmt2(n) {
+            const s = Number(n).toFixed(2);
+            const [i, d] = s.split('.');
+            return i.replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ',' + d;
+        }
+
+        // ---------- УТИЛІТИ ----------
+        function createServiceRow(id, labelText, defaultValue, checkedByDefault, step, icon) {
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            const checkboxId = `check-${id}`;
+            const valueId = `value-${id}`;
+            div.innerHTML = `
+                <div class="checkbox-group">
+                    <input type="checkbox" id="${checkboxId}" data-type="service" data-target="${valueId}" ${checkedByDefault ? 'checked' : ''}>
+                    <label for="${checkboxId}" class="checkbox-label"><i class="fas fa-${icon}"></i> ${labelText}</label>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="${valueId}" value="${defaultValue}" min="0" step="${step || 1}">
+                    ${step ? `<button type="button" class="btn-small step-minus" data-step="${step}">−</button>
+                               <button type="button" class="btn-small step-plus" data-step="${step}">+</button>` : ''}
+                </div>
+            `;
+            return div;
+        }
+
+        function createCustomPaymentRow(index, defaultValue, checkedDefault = false, step) {
+            const div = document.createElement('div');
+            div.className = 'form-group';
+            const id = `custom-${index}`;
+            const stepVal = step || 500;
+            div.innerHTML = `
+                <div class="checkbox-group">
+                    <input type="checkbox" id="check-${id}" data-type="custom" data-target-name="name-${id}" data-target-value="value-${id}" ${checkedDefault ? 'checked' : ''}>
+                    <input type="text" id="name-${id}" placeholder="Інший платіж ${index}" class="custom-name-input">
+                </div>
+                <div class="input-group" style="margin-top: 8px;">
+                    <input type="number" id="value-${id}" value="${defaultValue}" min="0" step="${stepVal}">
+                    <button type="button" class="btn-small step-minus" data-step="${stepVal}">−</button>
+                    <button type="button" class="btn-small step-plus" data-step="${stepVal}">+</button>
+                </div>
+            `;
+            return div;
+        }
+
+        // Глобальний делегат для кнопок +/–
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.step-plus, .step-minus, .qty-plus, .qty-minus, .price-plus, .price-minus');
+            if (!btn) return;
+            e.preventDefault();
+            let step = parseInt(btn.dataset.step);
+            if (isNaN(step)) step = 1;
+            const input = btn.closest('.input-group, .quantity-control, .price-control, .dodroz-amount-wrap')?.querySelector('input[type="text"], input[type="number"]');
+            if (input) {
+                let val = parseFloat(input.value) || 0;
+                if (btn.classList.contains('step-plus') || btn.classList.contains('qty-plus') || btn.classList.contains('price-plus')) {
+                    val += step;
+                } else {
+                    val -= step;
+                }
+                if (val < 0) val = 0;
+                input.value = val;
+                scheduleUpdate();
+            }
+        });
+
+        // ---------- РЕЖИМИ КУПІВЛЯ-ПРОДАЖ / ДАРУВАННЯ ----------
+        function generatePropertySections(mode) {
+            const propertyType = propertyTypeSelect.value;
+            const properties = propertyType.includes('+') ? propertyType.split('+').map(p => p.trim()) : [propertyType];
+            propertyContainer.innerHTML = '';
+
+            properties.forEach(prop => {
+                const propId = prop.replace(/[\s()/+-]/g, '-').toLowerCase();
+                const isLand = prop.toLowerCase().includes('земля');
+                let defaultTaxValue = "0";
+                if (mode === "donation") defaultTaxValue = "5_5";
+                else if (mode === "sale") {
+                    if (["нежитлове приміщення", "гараж", "гараж (або нп)"].includes(prop)) defaultTaxValue = "5_5";
+                    else defaultTaxValue = "0";
+                }
+
+                const section = document.createElement('div');
+                section.className = 'property-section';
+                section.dataset.propId = propId;
+
+                const headerRow = document.createElement('div');
+                headerRow.className = 'property-header-row';
+                headerRow.innerHTML = `
+                    <h3><i class="fas fa-tag"></i> Об'єкт: ${prop}</h3>
+                    <input type="text" id="main-note-${propId}" class="main-note-input" placeholder="Опис / частка / ПІБ">
+                `;
+                section.appendChild(headerRow);
+
+                const amountWrap = document.createElement('div');
+                amountWrap.className = 'form-group';
+                amountWrap.id = `main-amount-wrap-${propId}`;
+                amountWrap.innerHTML = `
+                    <label for="amount-${propId}"><i class="fas fa-money-bill-wave"></i> ${mode === 'donation' ? 'Сума дарунку (грн):' : 'Сума продажу (грн):'}</label>
+                    <input type="number" id="amount-${propId}" class="sale-amount-input" value="" min="0" placeholder="Введіть суму">
+                `;
+                section.appendChild(amountWrap);
+
+                const dutyDiv = document.createElement('div');
+                dutyDiv.className = 'checkbox-group';
+                dutyDiv.innerHTML = `
+                    <input type="checkbox" id="duty-${propId}" checked>
+                    <label for="duty-${propId}" class="checkbox-label"><i class="fas fa-receipt"></i> 1% мито</label>
+                `;
+                section.appendChild(dutyDiv);
+
+                if (mode === "sale" && !isLand) {
+                    const pensionDiv = document.createElement('div');
+                    pensionDiv.className = 'checkbox-group';
+                    pensionDiv.innerHTML = `
+                        <input type="checkbox" id="pension-${propId}" checked>
+                        <label for="pension-${propId}" class="checkbox-label"><i class="fas fa-piggy-bank"></i> 1% збір до ПФ</label>
+                    `;
+                    section.appendChild(pensionDiv);
+                }
+
+                const taxBlock = document.createElement('div');
+                taxBlock.className = 'form-group';
+                taxBlock.innerHTML = `<label><i class="fas fa-percent"></i> Податки:</label>`;
+                const taxButtonsDiv = document.createElement('div');
+                taxButtonsDiv.className = 'tax-buttons';
+                const taxOptions = [
+                    { value: "0", label: "Без податків" },
+                    { value: "5_5", label: "5% ПДФО + 5% ВЗ" },
+                    { value: "18_5", label: "18% ПДФО + 5% ВЗ" }
+                ];
+                taxOptions.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'tax-option';
+                    if (defaultTaxValue === opt.value) btn.classList.add('active');
+                    btn.textContent = opt.label;
+                    btn.dataset.taxValue = opt.value;
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        taxButtonsDiv.querySelectorAll('.tax-option').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        section.dataset.selectedTax = opt.value;
+                        scheduleUpdate();
+                    });
+                    taxButtonsDiv.appendChild(btn);
+                });
+                taxBlock.appendChild(taxButtonsDiv);
+                section.appendChild(taxBlock);
+                section.dataset.selectedTax = defaultTaxValue;
+
+                const addDodrozBtn = document.createElement('button');
+                addDodrozBtn.type = 'button';
+                addDodrozBtn.className = 'btn-add-dodroz';
+                addDodrozBtn.innerHTML = '<i class="fas fa-plus-circle"></i> додати суму / частку майна до розрахунку';
+                addDodrozBtn.addEventListener('click', () => {
+                    addDodrozRow(section, propId, prop, mode);
+                });
+                section.appendChild(addDodrozBtn);
+
+                const dodrozContainer = document.createElement('div');
+                dodrozContainer.className = 'dodroz-container';
+                dodrozContainer.dataset.propId = propId;
+                section.appendChild(dodrozContainer);
+
+                propertyContainer.appendChild(section);
+            });
+            enhanceAllNumericInputs(propertyContainer);
+        }
+
+        function addDodrozRow(section, propId, propName, mode) {
+            const container = section.querySelector('.dodroz-container');
+            if (!container) return;
+            const rowId = 'dodroz_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            const isLand = propName.toLowerCase().includes('земля');
+
+            const row = document.createElement('div');
+            row.className = 'dodroz-row';
+            row.dataset.dodrozId = rowId;
+
+            row.innerHTML = `
+                <button type="button" class="remove-dodroz-btn" data-row="${rowId}"><i class="fas fa-times"></i></button>
+                <div class="dodroz-amount-wrap">
+                    <label for="dodroz-amount-${rowId}"><i class="fas fa-money-bill-wave"></i> Сума (грн):</label>
+                    <input type="number" id="dodroz-amount-${rowId}" class="dodroz-amount-input" value="" min="0" placeholder="Введіть суму">
+                    <input type="text" id="dodroz-note-${rowId}" class="dodroz-note-input" placeholder="Опис / частка / ПІБ">
+                    <button type="button" class="btn-small step-minus" data-step="500">−</button>
+                    <button type="button" class="btn-small step-plus" data-step="500">+</button>
+                </div>
+                <div class="dodroz-checkboxes">
+                    <div class="checkbox-group" style="margin-bottom:0;">
+                        <input type="checkbox" id="dodroz-duty-${rowId}" checked>
+                        <label for="dodroz-duty-${rowId}" class="checkbox-label" style="font-weight:500;font-size:0.88rem;">1% мито</label>
+                    </div>
+                    ${mode === 'sale' && !isLand ? `
+                    <div class="checkbox-group" style="margin-bottom:0;">
+                        <input type="checkbox" id="dodroz-pension-${rowId}" checked>
+                        <label for="dodroz-pension-${rowId}" class="checkbox-label" style="font-weight:500;font-size:0.88rem;">1% збір до ПФ</label>
+                    </div>` : ''}
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <label style="font-weight:500;font-size:0.88rem;"><i class="fas fa-percent"></i> Податки:</label>
+                    <div class="tax-buttons dodroz-tax-buttons">
+                        <button type="button" class="tax-option active" data-tax="0">Без податків</button>
+                        <button type="button" class="tax-option" data-tax="5_5">5% ПДФО + 5% ВЗ</button>
+                        <button type="button" class="tax-option" data-tax="18_5">18% ПДФО + 5% ВЗ</button>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(row);
+            enhanceAllNumericInputs(row);
+
+            const mainNote = section.querySelector('.main-note-input');
+            if (mainNote) mainNote.classList.add('visible');
+
+            row.querySelector('.remove-dodroz-btn').addEventListener('click', () => {
+                row.remove();
+                const remaining = container.querySelectorAll('.dodroz-row').length;
+                if (remaining === 0) {
+                    const mn = section.querySelector('.main-note-input');
+                    if (mn) mn.classList.remove('visible');
+                }
+                scheduleUpdate();
+            });
+
+            row.querySelectorAll('input, select, .tax-option').forEach(el => {
+                el.addEventListener('change', scheduleUpdate);
+                el.addEventListener('click', scheduleUpdate);
+            });
+
+            const taxBtns = row.querySelectorAll('.tax-option');
+            taxBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    taxBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    scheduleUpdate();
+                });
+            });
+
+            row.querySelectorAll('.step-minus, .step-plus').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const input = this.closest('.dodroz-amount-wrap').querySelector('.dodroz-amount-input');
+                    if (!input) return;
+                    let step = parseInt(this.dataset.step) || 500;
+                    let val = parseFloat(input.value) || 0;
+                    if (this.classList.contains('step-plus')) val += step; else val -= step;
+                    if (val < 0) val = 0;
+                    input.value = val;
+                    scheduleUpdate();
+                });
+            });
+
+            scheduleUpdate();
+        }
+
+        function generateCommonServices(mode) {
+            commonContainer.innerHTML = '';
+            const basePrices = {
+                оформлення: { "земля с/г": 10000, "земля + будинок": 16000, "земля + гараж (або нп)": 12000, "земля с/г + садовий будинок": 18000, "будинок": 10000, default: 11000 },
+                квитанції: 1500,
+                оцінка: 1000,
+                витягДЗК: 1000,
+                заяваСг: 700,
+                згода: 500,
+                заяваРозрахунок: 500,
+                іншийПлатіж: 500
+            };
+            const propertyType = propertyTypeSelect.value;
+            const оформленняPrice = basePrices.оформлення[propertyType] || basePrices.оформлення.default;
+
+            commonContainer.appendChild(createServiceRow('оформлення', 'Оформлення', оформленняPrice, true, 1000, 'file-signature'));
+            commonContainer.appendChild(createServiceRow('квитанції', 'Квитанції', basePrices.квитанції, false, 500, 'receipt'));
+            const properties = propertyType.includes('+') ? propertyType.split('+').map(p => p.trim()) : [propertyType];
+            properties.forEach(prop => {
+                const propKey = prop.replace(/[\s()/+-]/g, '-').toLowerCase();
+                commonContainer.appendChild(createServiceRow(`оцінка-${propKey}`, `Оцінка ${prop}`, basePrices.оцінка, true, 500, 'search-dollar'));
+            });
+            if (propertyType.toLowerCase().includes('земля')) {
+                commonContainer.appendChild(createServiceRow('витяг-дзк', 'Витяг ДЗК', basePrices.витягДЗК, false, 500, 'file-alt'));
+            }
+            if (propertyType.toLowerCase().includes('земля с/г')) {
+                commonContainer.appendChild(createServiceRow('заява-сг', 'Заява с/г', basePrices.заяваСг, false, 0, 'file-signature'));
+            }
+            if (mode === 'donation') {
+                commonContainer.appendChild(createServiceRow('згода-продаж', 'Згода на дарування', basePrices.згода, false, 500, 'handshake'));
+                commonContainer.appendChild(createServiceRow('згода-купівлю', 'Згода на дарування', basePrices.згода, false, 500, 'handshake'));
+                commonContainer.appendChild(createServiceRow('заява-розрахунок', 'Згода батьків на укладення правочину дитиною', basePrices.заяваРозрахунок, false, 500, 'child'));
+            } else {
+                commonContainer.appendChild(createServiceRow('згода-продаж', 'Згода на продаж', basePrices.згода, false, 500, 'signature'));
+                commonContainer.appendChild(createServiceRow('згода-купівлю', 'Згода на купівлю', basePrices.згода, false, 500, 'signature'));
+                commonContainer.appendChild(createServiceRow('заява-розрахунок', 'Заява про повний розрахунок', basePrices.заяваРозрахунок, false, 500, 'calculator'));
+            }
+            const otherTitle = document.createElement('h3');
+            otherTitle.className = 'section-title';
+            otherTitle.innerHTML = '<i class="fas fa-coins"></i> Інші платежі';
+            commonContainer.appendChild(otherTitle);
+            for (let i = 1; i <= 5; i++) {
+                commonContainer.appendChild(createCustomPaymentRow(i, basePrices.іншийПлатіж, false, 500));
+            }
+            enhanceAllNumericInputs(commonContainer);
+        }
+
+        // ---------- СПАДЩИНА ----------
+        function generateInheritanceUI() {
+            inheritanceFixedDiv.innerHTML = '';
+            inheritanceFixedDiv.appendChild(createServiceRow('inher_fixed_0', 'Заведення спадкової справи', 4000, false, 500, 'file-invoice'));
+            const otherServices = [
+                { name: "запит в БТІ", default: 500 },
+                { name: "запит в Пенсійний фонд", default: 500 },
+                { name: "запит в банк", default: 500 },
+                { name: "запит", default: 500 },
+                { name: "заява від спадкоємця", default: 500 },
+                { name: "додаткова заява", default: 500 }
+            ];
+            otherServices.forEach((svc, idx) => {
+                inheritanceFixedDiv.appendChild(createServiceRow(`inher_fixed_${idx+1}`, svc.name, svc.default, false, 100, 'file-invoice'));
+            });
+
+            inheritanceCustomDiv.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                inheritanceCustomDiv.appendChild(createCustomPaymentRow(`_${i}`, 500, false, 100));
+            }
+
+            inheritanceObjectsDiv.innerHTML = '';
+            inheritanceObjectCounter = 0;
+            addInheritanceObject(false);
+            enhanceAllNumericInputs(inheritanceDiv);
+        }
+
+        function addInheritanceObject(autoCheckCert = true) {
+            const objectId = 'obj_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+            const objectDiv = document.createElement('div');
+            objectDiv.className = 'inheritance-object';
+            objectDiv.dataset.objectId = objectId;
+            const extendedTypes = [
+                "квартира", "нежитлове приміщення", "кімната", "гараж", "будинок", "земля", "земля с/г",
+                "земля + будинок", "земля + гараж (або нп)", "земля с/г + садовий будинок", "інше нерухоме майно",
+                "недоотримана пенсія", "частка у спільному майні подружжя", "транспортний засіб",
+                "недоотримані кошти", "частка в статутному капіталі", "зброя", "банківські вклади", "рухоме майно"
+            ];
+            const typeOptions = extendedTypes.map(t => `<option value="${t}">${t}</option>`).join('');
+            objectDiv.innerHTML = `
+                <button type="button" class="remove-object-btn" data-id="${objectId}"><i class="fas fa-trash-alt"></i></button>
+                <div class="form-group">
+                    <label><i class="fas fa-comment"></i> Замітки / коментар (об'єкт спадщини)</label>
+                    <textarea class="object-comment" placeholder="Додаткові нотатки для цього об'єкта"></textarea>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-building"></i> Тип об'єкта спадщина</label>
+                    <select class="object-type-select">${typeOptions}</select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-money-bill-wave"></i> Вартість (опціонально)</label>
+                    <input type="number" class="object-amount" value="" min="0" placeholder="Введіть суму">
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" class="object-duty" id="obj-duty-${objectId}">
+                    <label for="obj-duty-${objectId}" class="checkbox-label"><i class="fas fa-receipt"></i> 1% мито</label>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-percent"></i> Податки:</label>
+                    <div class="tax-buttons object-tax-buttons">
+                        <button type="button" class="tax-option active" data-tax="0">Без податків</button>
+                        <button type="button" class="tax-option" data-tax="5_5">5% ПДФО + 5% ВЗ</button>
+                        <button type="button" class="tax-option" data-tax="18_5">18% ПДФО + 5% ВЗ</button>
+                    </div>
+                </div>
+                <div id="certificates-${objectId}"></div>
+            `;
+            const certContainer = objectDiv.querySelector(`#certificates-${objectId}`);
+            const certs = [
+                { key: "cert1", label: "Свідоцтва про право на спадщину", defaultChecked: autoCheckCert, defaultQty: 1, defaultPrice: 8000, stepQty: 1, stepPrice: 1000 },
+                { key: "cert2", label: "Свідоцтва про право на частку у спільному майні подружжя", defaultChecked: false, defaultQty: 1, defaultPrice: 8000, stepQty: 1, stepPrice: 1000 },
+                { key: "cert3", label: "Свідоцтва на спадщину", defaultChecked: false, defaultQty: 1, defaultPrice: 8000, stepQty: 1, stepPrice: 1000 }
+            ];
+            certs.forEach(cert => {
+                const certDiv = document.createElement('div');
+                certDiv.className = 'certificate-row';
+                certDiv.innerHTML = `
+                    <div class="certificate-header">
+                        <input type="checkbox" class="cert-checkbox" data-cert="${cert.key}" ${cert.defaultChecked ? 'checked' : ''}>
+                        <strong>${cert.label}</strong>
+                    </div>
+                    <div class="certificate-controls">
+                        <div class="quantity-control">
+                            <span>Кількість:</span>
+                            <input type="number" class="cert-qty" value="${cert.defaultQty}" min="0" step="1" style="width: 60px;">
+                            <button type="button" class="btn-small qty-minus" data-step="${cert.stepQty}">−</button>
+                            <button type="button" class="btn-small qty-plus" data-step="${cert.stepQty}">+</button>
+                        </div>
+                        <div class="price-control">
+                            <span>Вартість (грн):</span>
+                            <input type="number" class="cert-price" value="${cert.defaultPrice}" min="0" step="1000" style="width: 90px;">
+                            <button type="button" class="btn-small price-minus" data-step="${cert.stepPrice}">−</button>
+                            <button type="button" class="btn-small price-plus" data-step="${cert.stepPrice}">+</button>
+                        </div>
+                    </div>
+                `;
+                certContainer.appendChild(certDiv);
+            });
+            inheritanceObjectsDiv.appendChild(objectDiv);
+            enhanceAllNumericInputs(objectDiv);
+
+            objectDiv.querySelector('.remove-object-btn').addEventListener('click', () => {
+                objectDiv.remove();
+                scheduleUpdate();
+            });
+            objectDiv.querySelectorAll('input, select, .tax-option').forEach(el => {
+                el.addEventListener('change', scheduleUpdate);
+                el.addEventListener('click', scheduleUpdate);
+            });
+            const taxBtns = objectDiv.querySelectorAll('.tax-option');
+            taxBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    taxBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    scheduleUpdate();
+                });
+            });
+
+            scheduleUpdate();
+        }
+
+        // ---------- РОЗРАХУНОК ----------
+        function computeTotalAndText() {
+            let total = 0;
+            let lines = [];
+            const headerNote = noteTextarea.value.trim();
+            if (headerNote) lines.push(headerNote + '\n');
+
+            if (currentMode === 'sale' || currentMode === 'donation') {
+                const propertyType = propertyTypeSelect.value;
+                const properties = propertyType.includes('+') ? propertyType.split('+').map(p => p.trim()) : [propertyType];
+
+                properties.forEach(prop => {
+                    const propId = prop.replace(/[\s()/+-]/g, '-').toLowerCase();
+                    const mainAmountInput = document.getElementById(`amount-${propId}`);
+                    let mainAmount = mainAmountInput ? parseFloat(mainAmountInput.value) || 0 : 0;
+                    const section = document.querySelector(`.property-section[data-prop-id="${propId}"]`);
+
+                    const mainNoteInput = document.getElementById(`main-note-${propId}`);
+                    const mainNote = mainNoteInput ? mainNoteInput.value.trim() : '';
+
+                    const dodrozRows = section ? section.querySelectorAll('.dodroz-row') : [];
+                    const dodrozData = [];
+                    dodrozRows.forEach(row => {
+                        const amt = parseFloat(row.querySelector('.dodroz-amount-input')?.value) || 0;
+                        const note = row.querySelector('.dodroz-note-input')?.value.trim() || '';
+                        const duty = row.querySelector('#dodroz-duty-' + row.dataset.dodrozId)?.checked || false;
+                        const pension = row.querySelector('#dodroz-pension-' + row.dataset.dodrozId)?.checked || false;
+                        const taxBtn = row.querySelector('.tax-option.active');
+                        const taxVal = taxBtn ? taxBtn.dataset.tax : "0";
+                        dodrozData.push({ amount: amt, note, duty, pension, tax: taxVal });
+                    });
+
+                    if (mainAmount <= 0 && dodrozData.every(d => d.amount <= 0)) return;
+
+                    function processAmount(amount, note, dutyChecked, pensionChecked, taxValue, labelPrefix) {
+                        if (amount <= 0) return;
+                        const noteSuffix = note ? ` - ${note}` : '';
+                        lines.push(`${labelPrefix}: ${fmt(amount)} грн${noteSuffix}`);
+                        if (dutyChecked) {
+                            const duty = amount * 0.01;
+                            lines.push(`1% мито - ${fmt(duty)}`);
+                            total += duty;
+                        }
+                        if (pensionChecked && currentMode === 'sale') {
+                            const pf = amount * 0.01;
+                            const pfComm = bankCommission(pf);
+                            lines.push(`1% збір до ПФ - ${fmt(pf)} + комісія банка - ${fmt(pfComm)}`);
+                            total += pf + pfComm;
+                        }
+                        if (taxValue !== '0') {
+                            const [pdfoRate, milRate] = taxValue.split('_').map(Number);
+                            const pdfo = amount * (pdfoRate / 100);
+                            const pdfoComm = bankCommission(pdfo);
+                            lines.push(`${pdfoRate}% ПДФО - ${fmt(pdfo)} + комісія банка - ${fmt(pdfoComm)}`);
+                            total += pdfo + pdfoComm;
+                            const military = amount * (milRate / 100);
+                            const militaryComm = bankCommission(military);
+                            lines.push(`${milRate}% Військовий збір - ${fmt(military)} + комісія банка - ${fmt(militaryComm)}`);
+                            total += military + militaryComm;
+                        }
+                    }
+
+                    const mainDuty = document.getElementById(`duty-${propId}`)?.checked || false;
+                    const mainPension = document.getElementById(`pension-${propId}`)?.checked || false;
+                    const mainTax = section?.dataset.selectedTax || "0";
+                    const labelBase = currentMode === 'donation' ? 'СУМА ДАРУНКУ ' + prop.toUpperCase() : 'СУМА ПРОДАЖУ ' + prop.toUpperCase();
+
+                    if (mainAmount > 0) {
+                        processAmount(mainAmount, mainNote || '', mainDuty, mainPension, mainTax, labelBase);
+                    }
+
+                    dodrozData.forEach((d, idx) => {
+                        const lbl = labelBase + (dodrozData.length > 1 ? ` (частка ${idx+1})` : '');
+                        processAmount(d.amount, d.note, d.duty, d.pension, d.tax, lbl);
+                    });
+
+                    lines.push('');
+                });
+
+                document.querySelectorAll('#common-services-container input[data-type="service"]').forEach(chk => {
+                    if (chk.checked) {
+                        const val = parseFloat(document.getElementById(chk.dataset.target)?.value) || 0;
+                        const label = chk.closest('.form-group')?.querySelector('.checkbox-label')?.innerText.trim() || '';
+                        lines.push(`${label} – ${fmt(val)}`);
+                        total += val;
+                    }
+                });
+                document.querySelectorAll('#common-services-container input[data-type="custom"]').forEach(chk => {
+                    if (chk.checked) {
+                        const name = document.getElementById(chk.dataset.targetName)?.value.trim() || 'Інший платіж';
+                        const val = parseFloat(document.getElementById(chk.dataset.targetValue)?.value) || 0;
+                        lines.push(`${name} - ${fmt(val)}`);
+                        total += val;
+                    }
+                });
+
+            } else if (currentMode === 'inheritance') {
+                document.querySelectorAll('#inheritanceFixedServices input[data-type="service"]').forEach(chk => {
+                    if (chk.checked) {
+                        const val = parseFloat(document.getElementById(chk.dataset.target)?.value) || 0;
+                        const label = chk.closest('.form-group')?.querySelector('.checkbox-label')?.innerText.trim() || '';
+                        lines.push(`${label} - ${fmt(val)}`);
+                        total += val;
+                    }
+                });
+                document.querySelectorAll('#inheritanceCustomPayments input[data-type="custom"]').forEach(chk => {
+                    if (chk.checked) {
+                        const name = document.getElementById(chk.dataset.targetName)?.value.trim() || 'Інший платіж';
+                        const val = parseFloat(document.getElementById(chk.dataset.targetValue)?.value) || 0;
+                        lines.push(`${name} - ${fmt(val)}`);
+                        total += val;
+                    }
+                });
+                document.querySelectorAll('.inheritance-object').forEach(obj => {
+                    const typeSelect = obj.querySelector('.object-type-select');
+                    const objectType = typeSelect ? typeSelect.value : "об'єкт";
+                    const amountInput = obj.querySelector('.object-amount');
+                    const amount = amountInput ? parseFloat(amountInput.value) || 0 : 0;
+                    const dutyCheck = obj.querySelector('.object-duty');
+                    const taxActive = obj.querySelector('.tax-option.active');
+                    const taxValue = taxActive ? taxActive.dataset.tax : "0";
+                    const comment = obj.querySelector('.object-comment')?.value.trim() || '';
+                    if (comment) lines.push(comment);
+                    if (amount > 0) {
+                        lines.push(`СУМА СПАДЩИНА ${objectType.toUpperCase()}: ${fmt(amount)} грн`);
+                        if (dutyCheck && dutyCheck.checked) {
+                            const duty = amount * 0.01;
+                            lines.push(`1% мито - ${fmt(duty)}`);
+                            total += duty;
+                        }
+                        if (taxValue !== '0') {
+                            const [pdfoRate, milRate] = taxValue.split('_').map(Number);
+                            const pdfo = amount * (pdfoRate / 100);
+                            const pdfoComm = bankCommission(pdfo);
+                            lines.push(`${pdfoRate}% ПДФО - ${fmt(pdfo)} + комісія банка - ${fmt(pdfoComm)}`);
+                            total += pdfo + pdfoComm;
+                            const military = amount * (milRate / 100);
+                            const militaryComm = bankCommission(military);
+                            lines.push(`${milRate}% Військовий збір - ${fmt(military)} + комісія банка - ${fmt(militaryComm)}`);
+                            total += military + militaryComm;
+                        }
+                    } else {
+                        lines.push(`СУМА СПАДЩИНА ${objectType.toUpperCase()}:`);
+                    }
+                    obj.querySelectorAll('.certificate-row').forEach(certRow => {
+                        const chk = certRow.querySelector('.cert-checkbox');
+                        if (chk && chk.checked) {
+                            const qty = parseFloat(certRow.querySelector('.cert-qty')?.value) || 0;
+                            const price = parseFloat(certRow.querySelector('.cert-price')?.value) || 0;
+                            const totalCert = qty * price;
+                            const label = certRow.querySelector('strong')?.innerText || 'Свідоцтво';
+                            lines.push(`${label} - ${qty} шт. по ${fmt(price)} = ${fmt(totalCert)}`);
+                            total += totalCert;
+                        }
+                    });
+                    lines.push('');
+                });
+            }
+
+            exactTotal = total;
+            const roundedTotal = Math.round(total / 50) * 50;
+            totalSpan.textContent = `${fmt(roundedTotal)} грн`;
+            const exactStr = fmt2(total);
+            exactSumSpan.textContent = exactStr;
+            if (exactSumSpanMobile) exactSumSpanMobile.textContent = exactStr;
+
+            calculationTextCache = lines.join('\n').trim();
+        }
+
+        function scheduleUpdate() {
+            if (updateTimer) clearTimeout(updateTimer);
+            updateTimer = setTimeout(() => computeTotalAndText(), 120);
+        }
+
+        // ---------- КОПІЮВАННЯ ----------
+        function showNotif(text) {
+            copyNotifText.textContent = text || 'Розрахунок скопійовано в буфер обміну!';
+            copyNotification.classList.add('show');
+            setTimeout(() => copyNotification.classList.remove('show'), 2000);
+        }
+        function copyCalculation(textToCopy) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy).then(() => showNotif()).catch(() => fallbackCopy(textToCopy));
+            } else {
+                fallbackCopy(textToCopy);
+            }
+        }
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy'); showNotif(); } catch(e) { alert('Не вдалося скопіювати'); }
+            document.body.removeChild(ta);
+        }
+
+        function getFullCalculationText() {
+            const finalTotal = totalSpan.textContent;
+            return calculationTextCache + `\n\nЗагальна сума: ${finalTotal}`;
+        }
+        function getExactCalculationText() {
+            const finalTotal = `${fmt2(exactTotal)} грн`;
+            return calculationTextCache + `\n\nЗагальна сума (точна): ${finalTotal}`;
+        }
+
+        // ---------- РЕЖИМИ ----------
+        function setActiveMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                if (btn.dataset.mode === mode) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+            if (mode === 'sale' || mode === 'donation') {
+                saleDonationDiv.style.display = 'block';
+                inheritanceDiv.style.display = 'none';
+                generatePropertySections(mode);
+                generateCommonServices(mode);
+            } else if (mode === 'inheritance') {
+                saleDonationDiv.style.display = 'none';
+                inheritanceDiv.style.display = 'block';
+                generateInheritanceUI();
+                inheritanceCollapsible.classList.remove('open');
+                inheritanceToggleBtn.classList.add('collapsed');
+                toggleIcon.className = 'fas fa-chevron-right';
+            }
+            scheduleUpdate();
+        }
+
+        // ---------- ПОДІЇ ----------
+        document.getElementById('modeSaleBtn').addEventListener('click', () => setActiveMode('sale'));
+        document.getElementById('modeDonationBtn').addEventListener('click', () => setActiveMode('donation'));
+        document.getElementById('modeInheritanceBtn').addEventListener('click', () => setActiveMode('inheritance'));
+
+        propertyTypeSelect.addEventListener('change', () => {
+            if (currentMode !== 'inheritance') {
+                generatePropertySections(currentMode);
+                generateCommonServices(currentMode);
+                scheduleUpdate();
+            }
+        });
+
+        addInheritanceBtn.addEventListener('click', () => addInheritanceObject(true));
+
+        form.addEventListener('input', (e) => {
+            if (e.target.closest('.tax-option')) return;
+            scheduleUpdate();
+        });
+
+        copyArea.addEventListener('click', () => copyCalculation(getFullCalculationText()));
+
+        function bindExact(el) { if (el) el.addEventListener('click', () => copyCalculation(getExactCalculationText())); }
+        bindExact(document.getElementById('exactSumBtn'));
+        bindExact(document.getElementById('exactSumBtnMobile'));
+
+        // Preview modal
+        const previewOverlay = document.getElementById('previewOverlay');
+        const previewModalBody = document.getElementById('previewModalBody');
+        const previewCloseBtn = document.getElementById('previewCloseBtn');
+
+        function openPreview() {
+            const fullText = getFullCalculationText();
+            previewModalBody.textContent = fullText || 'Немає даних для відображення.';
+            previewOverlay.classList.add('open');
+        }
+        document.getElementById('previewBtn').addEventListener('click', openPreview);
+        const mobPrev = document.getElementById('previewBtnMobile');
+        if (mobPrev) mobPrev.addEventListener('click', openPreview);
+
+        previewCloseBtn.addEventListener('click', () => previewOverlay.classList.remove('open'));
+        previewOverlay.addEventListener('click', (e) => {
+            if (e.target === previewOverlay) previewOverlay.classList.remove('open');
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && previewOverlay.classList.contains('open')) {
+                previewOverlay.classList.remove('open');
+            }
+        });
+
+        document.getElementById('previewCopyBtn').addEventListener('click', () => {
+            const text = previewModalBody.textContent;
+            if (text && text !== 'Немає даних для відображення.') copyCalculation(text);
+            else showNotif('Немає даних для копіювання');
+        });
+
+        inheritanceToggleBtn.addEventListener('click', () => {
+            const isOpen = inheritanceCollapsible.classList.contains('open');
+            if (isOpen) {
+                inheritanceCollapsible.classList.remove('open');
+                inheritanceToggleBtn.classList.add('collapsed');
+                toggleIcon.className = 'fas fa-chevron-right';
+            } else {
+                inheritanceCollapsible.classList.add('open');
+                inheritanceToggleBtn.classList.remove('collapsed');
+                toggleIcon.className = 'fas fa-chevron-down';
+            }
+        });
+
+        clearNoteBtn.addEventListener('click', () => {
+            noteBackup = noteTextarea.value;
+            noteTextarea.value = '';
+            scheduleUpdate();
+        });
+        undoNoteBtn.addEventListener('click', () => {
+            if (noteBackup !== undefined) {
+                noteTextarea.value = noteBackup;
+                scheduleUpdate();
+            }
+        });
+
+        // Ініціалізація
+        setActiveMode('sale');
+    })();
+    });
+</script>
+</body>
+</html>
